@@ -1,8 +1,8 @@
-<Mettre ici le nom de votre jeu>
+# Memorise Moi !
 ===========
 
-Développé par <prénom1 nom1> <prénom2 nom2>
-Contacts : <mail1> , <mail2>
+Développé par Mathys Bollengier et Adrien Fryson
+Contacts : mathys.bollengier.etu@univ-lille.fr, adrien.fryson.etu@univ-lille.fr
 
 # Présentation de <le nom de votre jeu>
 
