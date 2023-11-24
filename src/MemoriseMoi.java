@@ -61,7 +61,7 @@ class MemoriseMoi extends Program {
                 } else if (choix == 3) {
                     clearScreen();
                     init();
-                    choix = readInt();
+                    choix = 1;
                 }
             } else if (choix == 2) {
                 afficherRegles();

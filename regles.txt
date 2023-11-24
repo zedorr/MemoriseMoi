@@ -1,4 +1,4 @@
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
+- Le jeu comporte un nombre pair de cartes, l'objectif est d'associer chaque question à sa réponse
 
 - AAAAAAAAAAAAAAAAAAAAAAAAAAA
 - AAAAAAAAAAAAAAAAAAAAAAAAAAA
