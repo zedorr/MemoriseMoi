@@ -1,8 +1,9 @@
 class MemoriseMoi extends Program {
     void init() {
-        clearScreen();
-        println(fileToString(7, newFile("titre.txt")));
         accueil();
+        println("1. Jouer" + '\n' +
+                "2. Règles" + '\n' +
+                "3. Quitter");
     }
 
     String fileToString(int longueur, extensions.File fichier) {
@@ -14,33 +15,18 @@ class MemoriseMoi extends Program {
     }
 
     void accueil() {
+        clearScreen();
+        println(fileToString(7, newFile("titre.txt")));
         text("green");
         println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
                 "■           Choix           ■" + '\n' +
                 "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
         reset();
-        println("1. Jouer" + '\n' +
-                "2. Règles" + '\n' +
-                "3. Quitter");
     }
-
-    /*void animationTitre() {
-        String titre = fileToString(7, newFile("titre.txt"));
-        String[] lignes = titre.split("\n");
-        for (int i = 0; i < lignes.length; i++) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            println(lignes[i]);
-        }
-        println();
-    }*/
 
     void afficherRegles() {
         clearScreen();
-        println(fileToString(7, newFile("regles.txt")));
+        println(fileToString(17, newFile("regles.txt")));
         println("1. Retour");
         int choix = readInt();
         while (choix != 1) {
@@ -48,18 +34,41 @@ class MemoriseMoi extends Program {
             choix = readInt();
         }
         clearScreen();
-        accueil();
+        init();
+    }
+
+    void auRevoir() {
+        clearScreen();
+        println(fileToString(7, newFile("aurevoir.txt")));
     }
 
     void algorithm() {
-        init();
-        int choix = readInt();
-        while(choix != 3) {
-            if (choix == 2) {
-                afficherRegles();
+        int choix = 0;
+        do {
+            init();
+            choix = readInt();
+            if (choix == 1) {
+                clearScreen();
                 accueil();
+                println("1. Français" + '\n' +
+                        "2. Histoire" + '\n' +
+                        "3. Retour");
+                choix = readInt();
+                if (choix == 1) {
+                    // Français
+                } else if (choix == 2) {
+                    // Histoire
+                } else if (choix == 3) {
+                    clearScreen();
+                    init();
+                    choix = readInt();
+                }
+            } else if (choix == 2) {
+                afficherRegles();
+            } else if (choix == 3) {
+                println("");
             }
-        }
-
+        } while (choix != 3);
+        auRevoir();
     }
 }
