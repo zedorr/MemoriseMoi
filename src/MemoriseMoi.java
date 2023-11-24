@@ -16,7 +16,7 @@ class MemoriseMoi extends Program {
 
     void accueil() {
         clearScreen();
-        println(fileToString(7, newFile("titre.txt")));
+        println(fileToString(6, newFile("titre.txt")));
         text("green");
         println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
                 "■           Choix           ■" + '\n' +
@@ -39,7 +39,7 @@ class MemoriseMoi extends Program {
 
     void auRevoir() {
         clearScreen();
-        println(fileToString(7, newFile("aurevoir.txt")));
+        println(fileToString(6, newFile("aurevoir.txt")));
     }
 
     void algorithm() {
