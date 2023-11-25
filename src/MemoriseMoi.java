@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class MemoriseMoi extends Program {
     void init() {
         accueil();
@@ -42,7 +45,58 @@ class MemoriseMoi extends Program {
         println(fileToString(6, newFile("aurevoir.txt")));
     }
 
-    void algorithm() {
+    Carte newCarte(String valeur) {
+        Carte carte = new Carte();
+        carte.valeur = valeur;
+        carte.estRetournee = false;
+        carte.estAppariee = false;
+        return carte;
+    }
+
+    void retourner(Carte carte) {
+        carte.estRetournee = !carte.estRetournee;
+    }
+
+    boolean estAppariee(Carte carte) {
+        return carte.estAppariee;
+    }
+
+    void appairer(Carte carte) {
+        carte.estAppariee = true;
+    }
+
+    void afficher(Carte carte) {
+        if (carte.estRetournee) {
+            println("+-----------------------+");
+            println("|                       |");
+            String valeur = carte.valeur;
+            int maxLength = 22;
+            for (int i = 0; i < length(valeur); i += maxLength) {
+                String line = substring(valeur, i, Math.min(i + maxLength, length(valeur)));
+                println("| " + line + "|");
+        }
+        println("|                       |");
+        println("+-----------------------+");
+        } else {
+            println("+---------------------+");
+            println("|                     |");
+            println("|  Carte face cachée  |");
+            println("|                     |");
+            println("+---------------------+");
+        }
+    }
+
+    JeuDeCartes newJeuDeCartes() {
+        JeuDeCartes jeuDeCartes = new JeuDeCartes();
+        jeuDeCartes.nbCartes = 0;
+        jeuDeCartes.nbCartesRetournees = 0;
+        jeuDeCartes.nbCartesAppariees = 0;
+        jeuDeCartes.nbCartesRestantes = 0;
+        jeuDeCartes.paquet = new Carte[0];
+        return jeuDeCartes;
+    }
+
+    void boucle() {
         int choix = 0;
         do {
             init();
@@ -69,6 +123,10 @@ class MemoriseMoi extends Program {
                 println("");
             }
         } while (choix != 3);
+    }
+
+    void algorithm() {
+        boucle();
         auRevoir();
     }
 }
