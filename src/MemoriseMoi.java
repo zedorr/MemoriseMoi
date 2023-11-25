@@ -1,7 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class MemoriseMoi extends Program {
+    /**
+     * Affiche le menu principal
+     */
     void init() {
         accueil();
         println("1. Jouer" + '\n' +
@@ -9,6 +9,11 @@ class MemoriseMoi extends Program {
                 "3. Quitter");
     }
 
+    /**
+     * @param longueur Nombre de lignes à lire
+     * @param fichier  Fichier à lire
+     * Convertit un fichier en String
+     */
     String fileToString(int longueur, extensions.File fichier) {
         String res = "";
         for (int i = 0; i < longueur; i++) {
@@ -16,7 +21,10 @@ class MemoriseMoi extends Program {
         }
         return res;
     }
-
+    
+    /**
+     * Affiche le menu d'accueil
+     */
     void accueil() {
         clearScreen();
         println(fileToString(6, newFile("titre.txt")));
@@ -27,6 +35,9 @@ class MemoriseMoi extends Program {
         reset();
     }
 
+    /**
+     * Affiche les règles
+     */
     void afficherRegles() {
         clearScreen();
         println(fileToString(17, newFile("regles.txt")));
@@ -40,11 +51,20 @@ class MemoriseMoi extends Program {
         init();
     }
 
+
+    /**
+     * Affiche un texte d'au revoir
+     */
     void auRevoir() {
         clearScreen();
         println(fileToString(6, newFile("aurevoir.txt")));
     }
 
+    /**
+     * @param valeur Valeur de la carte
+     * @return Carte
+     * Crée une carte
+     */
     Carte newCarte(String valeur) {
         Carte carte = new Carte();
         carte.valeur = valeur;
@@ -53,18 +73,35 @@ class MemoriseMoi extends Program {
         return carte;
     }
 
+    /**
+     * @param carte
+     * retourne la carte
+     */
     void retourner(Carte carte) {
         carte.estRetournee = !carte.estRetournee;
     }
 
+    /**
+     * @param carte
+     * @return boolean
+     * Vérifie si la carte est appariee
+     */
     boolean estAppariee(Carte carte) {
         return carte.estAppariee;
     }
 
+    /**
+     * @param carte
+     * Appaire la carte
+     */
     void appairer(Carte carte) {
         carte.estAppariee = true;
     }
 
+    /**
+     * @param carte
+     * Affiche la carte selon si elle est retournée ou non
+     */
     void afficher(Carte carte) {
         if (carte.estRetournee) {
             println("+-----------------------+");
@@ -86,6 +123,9 @@ class MemoriseMoi extends Program {
         }
     }
 
+    /**
+     * Crée un jeu de cartes
+     */
     JeuDeCartes newJeuDeCartes() {
         JeuDeCartes jeuDeCartes = new JeuDeCartes();
         jeuDeCartes.nbCartes = 0;
@@ -96,6 +136,9 @@ class MemoriseMoi extends Program {
         return jeuDeCartes;
     }
 
+    /**
+     * Boucle principale du jeu
+     */
     void boucle() {
         int choix = 0;
         do {
@@ -125,6 +168,9 @@ class MemoriseMoi extends Program {
         } while (choix != 3);
     }
 
+    /**
+     * Algorithme principal
+     */
     void algorithm() {
         boucle();
         auRevoir();
