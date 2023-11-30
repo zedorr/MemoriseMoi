@@ -21,6 +21,16 @@ class MemoriseMoi extends Program {
         }
         return res;
     }
+
+    void testFileToString() {
+        extensions.File fichier = newFile("test.txt");
+        assertEquals("Bonjour\n" +
+                "Comment\n" +
+                "ça va\n" +
+                "Bien et toi\n" +
+                "Très bien merci\n" +
+                "Au revoir\n", fileToString(6, fichier));
+    }
     
     /**
      * Affiche le menu d'accueil
@@ -71,6 +81,13 @@ class MemoriseMoi extends Program {
         carte.estRetournee = false;
         carte.estAppariee = false;
         return carte;
+    }
+
+    void testNewCarte() {
+        Carte carte = newCarte("Bonjour");
+        assertEquals("Bonjour", carte.valeur);
+        assertFalse(carte.estRetournee);
+        assertFalse(carte.estAppariee);
     }
 
     /**
@@ -136,6 +153,68 @@ class MemoriseMoi extends Program {
         return jeuDeCartes;
     }
 
+    void testNewJeuDeCartes() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        assertEquals(0, jeuDeCartes.nbCartes);
+        assertEquals(0, jeuDeCartes.nbCartesRetournees);
+        assertEquals(0, jeuDeCartes.nbCartesAppariees);
+        assertEquals(0, jeuDeCartes.nbCartesRestantes);
+        assertEquals(0, length(jeuDeCartes.paquet));
+    }
+
+    /**
+     * @param paquet
+     * @param carte
+     * Retourne un tableau de cartes
+     */
+    Carte[] add(Carte[] paquet, Carte carte) {
+        Carte[] res = new Carte[length(paquet) + 1];
+        for (int i = 0; i < length(paquet); i++) {
+            res[i] = paquet[i];
+        }
+        res[length(paquet)] = carte;
+        return res;
+    }
+
+    void testAdd() {
+        Carte[] paquet = new Carte[0];
+        paquet = add(paquet, newCarte("Bonjour"));
+        assertEquals(1, length(paquet));
+        assertEquals("Bonjour", paquet[0].valeur);
+        paquet = add(paquet, newCarte("Comment"));
+        assertEquals(2, length(paquet));
+        assertEquals("Comment", paquet[1].valeur);
+    }
+
+    /**
+     * @param paquet
+     * @param carte
+     * Ajoute une carte au jeu de cartes
+     */
+    JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte carte) {
+        jeuDeCartes.nbCartes++;
+        jeuDeCartes.nbCartesRestantes++;
+        jeuDeCartes.paquet = add(jeuDeCartes.paquet, carte);
+        return jeuDeCartes;
+    }
+
+    void testAjouterCarte() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        assertEquals(0, jeuDeCartes.nbCartes);
+        assertEquals(0, jeuDeCartes.nbCartesRestantes);
+        assertEquals(0, length(jeuDeCartes.paquet));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour"));
+        assertEquals(1, jeuDeCartes.nbCartes);
+        assertEquals(1, jeuDeCartes.nbCartesRestantes);
+        assertEquals(1, length(jeuDeCartes.paquet));
+        assertEquals("Bonjour", jeuDeCartes.paquet[0].valeur);
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment"));
+        assertEquals(2, jeuDeCartes.nbCartes);
+        assertEquals(2, jeuDeCartes.nbCartesRestantes);
+        assertEquals(2, length(jeuDeCartes.paquet));
+        assertEquals("Comment", jeuDeCartes.paquet[1].valeur);
+    }
+
     /**
      * Boucle principale du jeu
      */
@@ -171,8 +250,8 @@ class MemoriseMoi extends Program {
     /**
      * Algorithme principal
      */
-    void algorithm() {
+    /*void algorithm() {
         boucle();
         auRevoir();
-    }
+    }*/
 }
