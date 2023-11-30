@@ -119,24 +119,14 @@ class MemoriseMoi extends Program {
      * @param carte
      * Affiche la carte selon si elle est retournée ou non
      */
-    void afficher(Carte carte) {
+    void afficherCarte(Carte carte) {
         if (carte.estRetournee) {
-            println("+-----------------------+");
-            println("|                       |");
-            String valeur = carte.valeur;
-            int maxLength = 22;
-            for (int i = 0; i < length(valeur); i += maxLength) {
-                String line = substring(valeur, i, Math.min(i + maxLength, length(valeur)));
-                println("| " + line + "|");
-        }
-        println("|                       |");
-        println("+-----------------------+");
+            println(carte.valeur);
         } else {
-            println("+---------------------+");
-            println("|                     |");
-            println("|  Carte face cachée  |");
-            println("|                     |");
-            println("+---------------------+");
+            println("■■■■■"+'\n'+
+                    "■■■■■"+'\n'+
+                    "■■■■■"+'\n'+
+                    "■■■■■");
         }
     }
 
@@ -250,8 +240,12 @@ class MemoriseMoi extends Program {
     /**
      * Algorithme principal
      */
-    /*void algorithm() {
-        boucle();
-        auRevoir();
-    }*/
+    void algorithm() {
+        //boucle();
+        //auRevoir();
+        Carte carte = newCarte("Bonjour");
+        afficherCarte(carte);
+        carte.estRetournee = true;
+        afficherCarte(carte);
+    }
 }
