@@ -14,22 +14,26 @@ class MemoriseMoi extends Program {
      * @param fichier  Fichier à lire
      * Convertit un fichier en String
      */
-    String fileToString(int longueur, extensions.File fichier) {
+    String fileToString(String nomFichier) {
+        extensions.File f = newFile(nomFichier);
         String res = "";
-        for (int i = 0; i < longueur; i++) {
-            res = res + fichier.readLine() + '\n';
+        if (ready(f)) {
+            String line = "f";
+            while (line != null) {
+                line = readLine(f);
+                res = res + line + '\n';
+            }
         }
-        return res;
+        return substring(res, 0, length(res)-5);
     }
 
     void testFileToString() {
-        extensions.File fichier = newFile("test.txt");
         assertEquals("Bonjour\n" +
                 "Comment\n" +
                 "ça va\n" +
                 "Bien et toi\n" +
                 "Très bien merci\n" +
-                "Au revoir\n", fileToString(6, fichier));
+                "Au revoir\n", fileToString("test.txt"));
     }
     
     /**
@@ -37,7 +41,7 @@ class MemoriseMoi extends Program {
      */
     void accueil() {
         clearScreen();
-        println(fileToString(6, newFile("titre.txt")));
+        println(fileToString("titre.txt"));
         text("green");
         println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
                 "■           Choix           ■" + '\n' +
@@ -50,7 +54,7 @@ class MemoriseMoi extends Program {
      */
     void afficherRegles() {
         clearScreen();
-        println(fileToString(17, newFile("regles.txt")));
+        println(fileToString("regles.txt"));
         println("1. Retour");
         int choix = readInt();
         while (choix != 1) {
@@ -67,7 +71,7 @@ class MemoriseMoi extends Program {
      */
     void auRevoir() {
         clearScreen();
-        println(fileToString(6, newFile("aurevoir.txt")));
+        println(fileToString("aurevoir.txt"));
     }
 
     /**
@@ -127,6 +131,13 @@ class MemoriseMoi extends Program {
                     "■■■■■"+'\n'+
                     "■■■■■"+'\n'+
                     "■■■■■");
+        }
+    }
+
+    void afficherPaquet(Carte[] paquet) {
+        for (int i = 0; i < length(paquet); i++) {
+            afficherCarte(paquet[i]);
+            println();
         }
     }
 
@@ -221,7 +232,7 @@ class MemoriseMoi extends Program {
                         "3. Retour");
                 choix = readInt();
                 if (choix == 1) {
-                    // Français
+                    // jouerFrancais();
                 } else if (choix == 2) {
                     // Histoire
                 } else if (choix == 3) {
@@ -240,12 +251,16 @@ class MemoriseMoi extends Program {
     /**
      * Algorithme principal
      */
-    void algorithm() {
+    void _algorithm() {
         //boucle();
         //auRevoir();
-        Carte carte = newCarte("Bonjour");
-        afficherCarte(carte);
-        carte.estRetournee = true;
-        afficherCarte(carte);
+        /*Carte carte1 = newCarte("Capitale de la France");
+        Carte carte2 = newCarte("Paris");
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        ajouterCarte(jeuDeCartes, carte1);
+        ajouterCarte(jeuDeCartes, carte2);
+        afficherPaquet(jeuDeCartes.paquet);
+        carte1.estRetournee = true;
+        afficherPaquet(jeuDeCartes.paquet);*/
     }
 }
