@@ -1,5 +1,5 @@
 class JeuDeCartes {
-    Carte[] paquet;
+    Carte[][] paquet;
     int nbCartes;
     int nbCartesRetournees;
     int nbCartesAppariees;

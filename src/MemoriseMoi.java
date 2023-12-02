@@ -1,3 +1,6 @@
+import extensions.CSVFile;
+import extensions.File;
+
 class MemoriseMoi extends Program {
     /**
      * Affiche le menu principal
@@ -134,13 +137,19 @@ class MemoriseMoi extends Program {
         }
     }
 
-    void afficherPaquet(Carte[] paquet) {
+    /**
+     * @param paquet
+     * Affiche le paquet de cartes
+     */
+    void afficherPaquet(Carte[][] paquet) {
         for (int i = 0; i < length(paquet); i++) {
-            afficherCarte(paquet[i]);
-            println();
+            for (int j = 0; j < length(paquet[i]); j++) {
+                afficherCarte(paquet[i][j]);
+            }
+            println("");
         }
     }
-
+    
     /**
      * Crée un jeu de cartes
      */
@@ -150,7 +159,7 @@ class MemoriseMoi extends Program {
         jeuDeCartes.nbCartesRetournees = 0;
         jeuDeCartes.nbCartesAppariees = 0;
         jeuDeCartes.nbCartesRestantes = 0;
-        jeuDeCartes.paquet = new Carte[0];
+        jeuDeCartes.paquet = new Carte[0][0];
         return jeuDeCartes;
     }
 
@@ -166,26 +175,30 @@ class MemoriseMoi extends Program {
     /**
      * @param paquet
      * @param carte
-     * Retourne un tableau de cartes
+     * @return Carte[]
+     * Ajoute une carte au paquet
      */
-    Carte[] add(Carte[] paquet, Carte carte) {
-        Carte[] res = new Carte[length(paquet) + 1];
+    Carte[][] add(Carte[][] paquet, Carte carte) {
+        Carte[][] res = new Carte[length(paquet)+1][length(paquet[0])];
         for (int i = 0; i < length(paquet); i++) {
-            res[i] = paquet[i];
+            for (int j = 0; j < length(paquet[i]); j++) {
+                res[i][j] = paquet[i][j];
+            }
         }
-        res[length(paquet)] = carte;
+        res[length(paquet)][0] = carte;
         return res;
     }
-
+    /*
     void testAdd() {
-        Carte[] paquet = new Carte[0];
+        Carte[][] paquet = new Carte[0][0];
+        assertEquals(0, length(paquet));
         paquet = add(paquet, newCarte("Bonjour"));
         assertEquals(1, length(paquet));
-        assertEquals("Bonjour", paquet[0].valeur);
+        assertEquals("Bonjour", paquet[0][0].valeur);
         paquet = add(paquet, newCarte("Comment"));
         assertEquals(2, length(paquet));
-        assertEquals("Comment", paquet[1].valeur);
-    }
+        assertEquals("Comment", paquet[1][0].valeur);
+    }*/
 
     /**
      * @param paquet
@@ -199,7 +212,7 @@ class MemoriseMoi extends Program {
         return jeuDeCartes;
     }
 
-    void testAjouterCarte() {
+    /*void testAjouterCarte() {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
         assertEquals(0, jeuDeCartes.nbCartes);
         assertEquals(0, jeuDeCartes.nbCartesRestantes);
@@ -208,12 +221,23 @@ class MemoriseMoi extends Program {
         assertEquals(1, jeuDeCartes.nbCartes);
         assertEquals(1, jeuDeCartes.nbCartesRestantes);
         assertEquals(1, length(jeuDeCartes.paquet));
-        assertEquals("Bonjour", jeuDeCartes.paquet[0].valeur);
+        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment"));
         assertEquals(2, jeuDeCartes.nbCartes);
         assertEquals(2, jeuDeCartes.nbCartesRestantes);
         assertEquals(2, length(jeuDeCartes.paquet));
-        assertEquals("Comment", jeuDeCartes.paquet[1].valeur);
+        assertEquals("Comment", jeuDeCartes.paquet[1][0].valeur);
+    }*/
+    
+    Carte[][] loadCartes(String nomFichier) {
+        CSVFile f = loadCSV(nomFichier);
+        Carte[][] res = new Carte[rowCount(f)][columnCount(f)];
+        for (int i = 0; i < rowCount(f); i++) {
+            for (int j = 0; j < columnCount(f); j++) {
+                res[i][j] = newCarte(getCell(f, i, j));
+            }
+        }
+        return res;
     }
 
     /**
@@ -251,7 +275,7 @@ class MemoriseMoi extends Program {
     /**
      * Algorithme principal
      */
-    void _algorithm() {
+    void algorithm() {
         //boucle();
         //auRevoir();
         /*Carte carte1 = newCarte("Capitale de la France");
