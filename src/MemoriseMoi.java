@@ -133,7 +133,7 @@ class MemoriseMoi extends Program {
             String valeur = carte.valeur;
             String espacesGauche = "";
             String espacesDroite = "";
-            int espaces = (19 - length(valeur)) / 2; // Calcul du nombre d'espaces pour centrer la valeur
+            int espaces = (19 - length(valeur)) / 2; 
             for (int i=0 ; i < espaces ; i++) {
                 espacesGauche = espacesGauche + " ";
             }
@@ -153,6 +153,7 @@ class MemoriseMoi extends Program {
      * Affiche le paquet de cartes
      */
     void afficherPaquet(Carte[][] paquet) {
+        clearScreen();
         for (int i = 0; i < length(paquet); i++) {
             for (int j = 0; j < 2; j++) {
                 afficherCarte(paquet[i][j]);
@@ -283,14 +284,16 @@ class MemoriseMoi extends Program {
      * @return Carte[][]
      * Mélange le paquet de cartes
      */
-    Carte[][] melanger(Carte[][] paquet) {
+    void melanger(Carte[][] paquet) {
         for (int i = 0; i < length(paquet); i++) {
-            int random = randomInt(length(paquet));
-            Carte[] temp = paquet[i];
-            paquet[i] = paquet[random];
-            paquet[random] = temp;
+            for (int j = 0; j < 2; j++) {
+                int randomLigne = randomInt(length(paquet));
+                int randomColonne = randomInt(2);
+                Carte temp = paquet[i][j];
+                paquet[i][j] = paquet[randomLigne][randomColonne];
+                paquet[randomLigne][randomColonne] = temp;
+            }
         }
-        return paquet;
     }
 
     
@@ -306,15 +309,15 @@ class MemoriseMoi extends Program {
         afficherPaquet(jeuDeCartes.paquet);
         while (jeuDeCartes.nbCartesRestantes > 0) {
             println("Ligne de la carte à retourner : ");
-            int choixLigne1 = readInt();
+            int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
             println("Colonne de la carte à retourner : ");
-            int choixColonne1 = readInt();
+            int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet);
             retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
             afficherPaquet(jeuDeCartes.paquet);
             println("Ligne de la carte à retourner : ");
-            int choixLigne2 = readInt();
+            int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
             println("Colonne de la carte à retourner : ");
-            int choixColonne2 = readInt();
+            int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet);
             retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
             afficherPaquet(jeuDeCartes.paquet);
             if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
@@ -326,6 +329,26 @@ class MemoriseMoi extends Program {
                 retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
             }
         }
+    }
+
+    int saisieValideLigne(Carte[][] paquet) {
+        int lignes = length(paquet, 1);
+        int res = readInt();
+        if (res < 0 || res >= lignes) {
+            println("Veuillez saisir un nombre entre 0 et " + (lignes-1));
+            res = readInt();
+        }
+        return res;
+    }
+
+    int saisieValideColonne(Carte[][] paquet) {
+        int colonnes = length(paquet, 2);
+        int res = readInt();
+        if (res < 0 || res >= colonnes) {
+            println("Veuillez saisir un nombre entre 0 et " + (colonnes-1));
+            res = readInt();
+        }
+        return res;
     }
 
     /**
