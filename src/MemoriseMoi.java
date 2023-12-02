@@ -1,5 +1,4 @@
 import extensions.CSVFile;
-import extensions.File;
 
 class MemoriseMoi extends Program {
     /**
@@ -145,8 +144,8 @@ class MemoriseMoi extends Program {
         for (int i = 0; i < length(paquet); i++) {
             for (int j = 0; j < length(paquet[i]); j++) {
                 afficherCarte(paquet[i][j]);
+                println();
             }
-            println("");
         }
     }
     
@@ -156,8 +155,6 @@ class MemoriseMoi extends Program {
     JeuDeCartes newJeuDeCartes() {
         JeuDeCartes jeuDeCartes = new JeuDeCartes();
         jeuDeCartes.nbCartes = 0;
-        jeuDeCartes.nbCartesRetournees = 0;
-        jeuDeCartes.nbCartesAppariees = 0;
         jeuDeCartes.nbCartesRestantes = 0;
         jeuDeCartes.paquet = new Carte[0][0];
         return jeuDeCartes;
@@ -166,8 +163,6 @@ class MemoriseMoi extends Program {
     void testNewJeuDeCartes() {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
         assertEquals(0, jeuDeCartes.nbCartes);
-        assertEquals(0, jeuDeCartes.nbCartesRetournees);
-        assertEquals(0, jeuDeCartes.nbCartesAppariees);
         assertEquals(0, jeuDeCartes.nbCartesRestantes);
         assertEquals(0, length(jeuDeCartes.paquet));
     }
@@ -176,69 +171,99 @@ class MemoriseMoi extends Program {
      * @param paquet
      * @param carte
      * @return Carte[]
-     * Ajoute une carte au paquet
+     * Ajoute un couple de cartes au paquet
      */
-    Carte[][] add(Carte[][] paquet, Carte carte) {
-        Carte[][] res = new Carte[length(paquet)+1][length(paquet[0])];
+    Carte[][] add(Carte[][] paquet, Carte question, Carte reponse) {
+        Carte[][] res = new Carte[length(paquet)+1][2];
         for (int i = 0; i < length(paquet); i++) {
-            for (int j = 0; j < length(paquet[i]); j++) {
-                res[i][j] = paquet[i][j];
-            }
+            res[i][0] = paquet[i][0];
+            res[i][1] = paquet[i][1];
         }
-        res[length(paquet)][0] = carte;
+        res[length(paquet)][0] = question;
+        res[length(paquet)][1] = reponse;
         return res;
     }
-    /*
-    void testAdd() {
-        Carte[][] paquet = new Carte[0][0];
-        assertEquals(0, length(paquet));
-        paquet = add(paquet, newCarte("Bonjour"));
-        assertEquals(1, length(paquet));
-        assertEquals("Bonjour", paquet[0][0].valeur);
-        paquet = add(paquet, newCarte("Comment"));
-        assertEquals(2, length(paquet));
-        assertEquals("Comment", paquet[1][0].valeur);
-    }*/
 
     /**
      * @param paquet
      * @param carte
-     * Ajoute une carte au jeu de cartes
+     * Ajoute un couple de cartes au jeu de cartes
      */
-    JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte carte) {
-        jeuDeCartes.nbCartes++;
-        jeuDeCartes.nbCartesRestantes++;
-        jeuDeCartes.paquet = add(jeuDeCartes.paquet, carte);
+    JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte question, Carte reponse) {
+        jeuDeCartes.nbCartes+=2;
+        jeuDeCartes.nbCartesRestantes+=2;
+        jeuDeCartes.paquet = add(jeuDeCartes.paquet, question, reponse);
         return jeuDeCartes;
     }
-
-    /*void testAjouterCarte() {
-        JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        assertEquals(0, jeuDeCartes.nbCartes);
-        assertEquals(0, jeuDeCartes.nbCartesRestantes);
-        assertEquals(0, length(jeuDeCartes.paquet));
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour"));
-        assertEquals(1, jeuDeCartes.nbCartes);
-        assertEquals(1, jeuDeCartes.nbCartesRestantes);
-        assertEquals(1, length(jeuDeCartes.paquet));
-        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment"));
-        assertEquals(2, jeuDeCartes.nbCartes);
-        assertEquals(2, jeuDeCartes.nbCartesRestantes);
-        assertEquals(2, length(jeuDeCartes.paquet));
-        assertEquals("Comment", jeuDeCartes.paquet[1][0].valeur);
-    }*/
     
     Carte[][] loadCartes(String nomFichier) {
         CSVFile f = loadCSV(nomFichier);
-        Carte[][] res = new Carte[rowCount(f)][columnCount(f)];
+        Carte[][] res = new Carte[rowCount(f)][2];
         for (int i = 0; i < rowCount(f); i++) {
-            for (int j = 0; j < columnCount(f); j++) {
+            for (int j = 0; j < 2; j++) {
                 res[i][j] = newCarte(getCell(f, i, j));
             }
         }
         return res;
     }
+
+    /**
+     * @param max
+     * @return int
+     * Génère un nombre aléatoire entre 0 et max
+     */
+    int randomInt(int max) {
+        return (int) (random() * max);
+    }
+
+    /**
+     * @param paquet
+     * @return Carte[][]
+     * Mélange le paquet de cartes
+     */
+    Carte[][] melanger(Carte[][] paquet) {
+        for (int i = 0; i < length(paquet); i++) {
+            int random = randomInt(length(paquet));
+            Carte[] temp = paquet[i];
+            paquet[i] = paquet[random];
+            paquet[random] = temp;
+        }
+        return paquet;
+    }
+
+    void jouerFrancais() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour"), newCarte("Hello"));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment"), newCarte("How"));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("ça va"), newCarte("are you"));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bien et toi"), newCarte("Fine and you"));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Très bien merci"), newCarte("Very well thank you"));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Au revoir"), newCarte("Goodbye"));
+        melanger(jeuDeCartes.paquet);
+        afficherPaquet(jeuDeCartes.paquet);
+        while (jeuDeCartes.nbCartesRestantes > 0) {
+            println("Ligne de la carte à retourner : ");
+            int choixLigne1 = readInt();
+            println("Colonne de la carte à retourner : ");
+            int choixColonne1 = readInt();
+            retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+                afficherPaquet(jeuDeCartes.paquet);
+                println("Ligne de la carte à retourner : ");
+                int choixLigne2 = readInt();
+                println("Colonne de la carte à retourner : ");
+                int choixColonne2 = readInt();
+                retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+                afficherPaquet(jeuDeCartes.paquet);
+                if (jeuDeCartes.paquet[choixLigne1][choixColonne1].valeur == jeuDeCartes.paquet[choixLigne2][choixColonne2].valeur) {
+                    appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+                    appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+                    jeuDeCartes.nbCartesRestantes -= 2;
+                } else {
+                    retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+                    retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+                }
+            }
+        }
 
     /**
      * Boucle principale du jeu
@@ -256,7 +281,7 @@ class MemoriseMoi extends Program {
                         "3. Retour");
                 choix = readInt();
                 if (choix == 1) {
-                    // jouerFrancais();
+                    jouerFrancais();
                 } else if (choix == 2) {
                     // Histoire
                 } else if (choix == 3) {
@@ -276,15 +301,7 @@ class MemoriseMoi extends Program {
      * Algorithme principal
      */
     void algorithm() {
-        //boucle();
-        //auRevoir();
-        /*Carte carte1 = newCarte("Capitale de la France");
-        Carte carte2 = newCarte("Paris");
-        JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        ajouterCarte(jeuDeCartes, carte1);
-        ajouterCarte(jeuDeCartes, carte2);
-        afficherPaquet(jeuDeCartes.paquet);
-        carte1.estRetournee = true;
-        afficherPaquet(jeuDeCartes.paquet);*/
+        boucle();
+        auRevoir();
     }
 }
