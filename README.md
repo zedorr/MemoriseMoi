@@ -7,7 +7,7 @@ Contacts : mathys.bollengier.etu@univ-lille.fr, adrien.fryson.etu@univ-lille.fr
 # Présentation de <le nom de votre jeu>
 
 <Description de votre jeu>
-Des captures d'écran illustrant le fonctionnement du logiciel sont proposées dans le répertoire shots.
+(https://github.com/zedorr/MemoriseMoi/assets/91489879/b822ec0b-5d5d-4eda-b99b-825a1bb785cd)
 
 
 # Utilisation de <le nom de votre jeu>
