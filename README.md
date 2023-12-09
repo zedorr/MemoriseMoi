@@ -7,7 +7,6 @@ Contacts : mathys.bollengier.etu@univ-lille.fr, adrien.fryson.etu@univ-lille.fr
 # Présentation de <le nom de votre jeu>
 
 <Description de votre jeu>
-![mainMenu](https://github.com/zedorr/MemoriseMoi/blob/main/shots/mainMenu.png)
 
 
 
