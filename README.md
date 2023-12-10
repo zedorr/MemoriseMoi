@@ -7,7 +7,7 @@ Contacts : mathys.bollengier.etu@univ-lille.fr, adrien.fryson.etu@univ-lille.fr
 # Présentation de <le nom de votre jeu>
 
 <Description de votre jeu>
-Des captures d'écran illustrant le fonctionnement du logiciel sont proposées dans le répertoire shots.
+
 
 
 # Utilisation de <le nom de votre jeu>
