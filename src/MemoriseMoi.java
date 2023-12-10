@@ -121,44 +121,39 @@ class MemoriseMoi extends Program {
     void appairer(Carte carte) {
         carte.estAppariee = true;
     }
-
-    /**
-     * @param carte
-     * Affiche la carte selon si elle est retournée ou non
-     */
-    void afficherCarte(Carte carte) {
-        println(" _____________________ ");
-        println("|                     |");
-        if (carte.estRetournee) {
-            String valeur = carte.valeur;
-            String espacesGauche = "";
-            String espacesDroite = "";
-            int espaces = (19 - length(valeur)) / 2; 
-            for (int i=0 ; i < espaces ; i++) {
-                espacesGauche = espacesGauche + " ";
-            }
-            for (int j=0; j < 19 - length(valeur) - espaces ; j++) {
-                espacesDroite = espacesDroite + " ";
-            }
-            println("| " + espacesGauche + valeur + espacesDroite + " |");
-        } else {
-            println("|          ?          |");
-        }
-        println("|                     |");
-        println(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ");
-    }
-
+    
     /**
      * @param paquet
      * Affiche le paquet de cartes
      */
     void afficherPaquet(Carte[][] paquet) {
         clearScreen();
+        String affichage = "";
         for (int i = 0; i < length(paquet); i++) {
+            affichage = affichage + " _____________________ " + " _____________________ " + '\n';
+            affichage = affichage + "|                     |" + "|                     |" + '\n';
             for (int j = 0; j < 2; j++) {
-                afficherCarte(paquet[i][j]);
+                if (paquet[i][j].estRetournee) {
+                    String valeur = paquet[i][j].valeur;
+                    String espacesGauche = "";
+                    String espacesDroite = "";
+                    int espaces = (19 - length(valeur)) / 2; 
+                    for (int k=0 ; k < espaces ; k++) {
+                        espacesGauche = espacesGauche + " ";
+                    }
+                    for (int l=0; l < 19 - length(valeur) - espaces ; l++) {
+                        espacesDroite = espacesDroite + " ";
+                    }
+                    affichage = affichage + "| " + espacesGauche + valeur + espacesDroite + " |";
+                } else {
+                    affichage = affichage + "|          ?          |";
+                }
             }
+            affichage = affichage + '\n';
+            affichage = affichage + "|                     |" + "|                     |" + '\n';
+            affichage = affichage + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + '\n';
         }
+        println(affichage);
     }
     
     /**
@@ -299,6 +294,7 @@ class MemoriseMoi extends Program {
     
     void jouerFrancais() {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        // TABLEAU AVEC UN TEXTE ET UN ID A COTE
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment", 2), newCarte("How", 2));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("ça va", 3), newCarte("are you", 3));
@@ -334,21 +330,21 @@ class MemoriseMoi extends Program {
     int saisieValideLigne(Carte[][] paquet) {
         int lignes = length(paquet, 1);
         int res = readInt();
-        if (res < 0 || res >= lignes) {
-            println("Veuillez saisir un nombre entre 0 et " + (lignes-1));
+        if (res < 1 || res >= lignes+1) {
+            println("Veuillez saisir un nombre entre 1 et " + lignes);
             res = readInt();
         }
-        return res;
+        return res-1;
     }
 
     int saisieValideColonne(Carte[][] paquet) {
         int colonnes = length(paquet, 2);
         int res = readInt();
-        if (res < 0 || res >= colonnes) {
-            println("Veuillez saisir un nombre entre 0 et " + (colonnes-1));
+        if (res < 1 || res >= colonnes+1) {
+            println("Veuillez saisir un nombre entre 1 et " + colonnes);
             res = readInt();
         }
-        return res;
+        return res-1;
     }
 
     /**
