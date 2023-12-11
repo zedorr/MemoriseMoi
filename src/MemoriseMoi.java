@@ -222,6 +222,7 @@ class MemoriseMoi extends Program {
         assertEquals(2, jeuDeCartes.nbCartesRestantes);
         assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
         assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
+        assertEquals(1, jeuDeCartes.paquet[0][0].numId);
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment", 2), newCarte("How", 2));
         assertEquals(4, jeuDeCartes.nbCartes);
         assertEquals(4, jeuDeCartes.nbCartesRestantes);
@@ -247,9 +248,9 @@ class MemoriseMoi extends Program {
     void testLoadCartes() {
         Carte[][] paquet = loadCartes("questions/test.csv");
         assertEquals("Bonjour", paquet[0][0].valeur);
-        assertEquals("1", paquet[0][1].valeur);
-        assertEquals("are you", paquet[5][0].valeur);
-        assertEquals("3", paquet[5][1].valeur);
+        assertEquals("Hello", paquet[0][1].valeur);
+        assertEquals(0, paquet[0][0].numId);
+        assertEquals(0, paquet[0][1].numId);
     }
 
     /**
@@ -284,13 +285,22 @@ class MemoriseMoi extends Program {
     }
 
     void genererPaquet(JeuDeCartes j, Carte[][] paquet) {
-        for (int i=0; i<length(paquet, 1)-1; i++) {
-            int id = (int) charAt(paquet[i][1].valeur, 0);
-            j = ajouterCarte(j, newCarte(paquet[i][0].valeur, id), newCarte(paquet[i+1][0].valeur, id));
+        for (int i = 0; i < length(paquet, 1); i++) {
+            j = ajouterCarte(j, paquet[i][0], paquet[i][1]);
         }
     }
 
-    // FAIRE LES TESTS
+    void testGenererPaquet() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        Carte[][] paquet = loadCartes("questions/test.csv");
+        genererPaquet(jeuDeCartes, paquet);
+        assertEquals(4, jeuDeCartes.nbCartes);
+        assertEquals(4, jeuDeCartes.nbCartesRestantes);
+        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
+        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
+        assertEquals("Comment", jeuDeCartes.paquet[1][0].valeur);
+        assertEquals("How", jeuDeCartes.paquet[1][1].valeur);
+    }
 
     void jouerFrancais() {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
