@@ -247,17 +247,9 @@ class MemoriseMoi extends Program {
     void testLoadCartes() {
         Carte[][] paquet = loadCartes("questions/test.csv");
         assertEquals("Bonjour", paquet[0][0].valeur);
-        assertEquals("Hello", paquet[0][1].valeur);
-        assertEquals("Comment", paquet[1][0].valeur);
-        assertEquals("How", paquet[1][1].valeur);
-        assertEquals("ça va", paquet[2][0].valeur);
-        assertEquals("are you", paquet[2][1].valeur);
-        assertEquals("Bien et toi", paquet[3][0].valeur);
-        assertEquals("Fine and you", paquet[3][1].valeur);
-        assertEquals("Très bien merci", paquet[4][0].valeur);
-        assertEquals("Very well thank you", paquet[4][1].valeur);
-        assertEquals("Au revoir", paquet[5][0].valeur);
-        assertEquals("Goodbye", paquet[5][1].valeur);
+        assertEquals("1", paquet[0][1].valeur);
+        assertEquals("are you", paquet[5][0].valeur);
+        assertEquals("3", paquet[5][1].valeur);
     }
 
     /**
@@ -291,17 +283,27 @@ class MemoriseMoi extends Program {
         }
     }
 
-    
+    void genererPaquet(JeuDeCartes j, Carte[][] paquet) {
+        for (int i=0; i<length(paquet, 1)-1; i++) {
+            int id = (int) charAt(paquet[i][1].valeur, 0);
+            j = ajouterCarte(j, newCarte(paquet[i][0].valeur, id), newCarte(paquet[i+1][0].valeur, id));
+        }
+    }
+
+    // FAIRE LES TESTS
+
     void jouerFrancais() {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        Carte[][] p = loadCartes("questions/français.csv");
+        genererPaquet(jeuDeCartes, p);
         // TABLEAU AVEC UN TEXTE ET UN ID A COTE
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1));
+        /*jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment", 2), newCarte("How", 2));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("ça va", 3), newCarte("are you", 3));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bien et toi", 4), newCarte("Fine and you", 4));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Très bien merci", 5), newCarte("Very well thank you", 5));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Au revoir", 6), newCarte("Goodbye", 6));
-        melanger(jeuDeCartes.paquet);
+        */melanger(jeuDeCartes.paquet);
         afficherPaquet(jeuDeCartes.paquet);
         while (jeuDeCartes.nbCartesRestantes > 0) {
             println("Ligne de la carte à retourner : ");
