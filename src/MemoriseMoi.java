@@ -1,6 +1,8 @@
 import extensions.CSVFile;
 
 class MemoriseMoi extends Program {
+    String pseudo;
+
     /**
      * Affiche le menu principal
      */
@@ -12,8 +14,7 @@ class MemoriseMoi extends Program {
     }
 
     /**
-     * @param longueur Nombre de lignes à lire
-     * @param fichier  Fichier à lire
+     * @param nomFichier
      * Convertit un fichier en String
      */
     String fileToString(String nomFichier) {
@@ -38,6 +39,7 @@ class MemoriseMoi extends Program {
                 "Au revoir\n", fileToString("test.txt"));
     }
     
+
     /**
      * Affiche le menu d'accueil
      */
@@ -78,6 +80,7 @@ class MemoriseMoi extends Program {
 
     /**
      * @param valeur Valeur de la carte
+     * @param numId Numéro d'identification de la carte
      * @return Carte
      * Crée une carte
      */
@@ -105,6 +108,14 @@ class MemoriseMoi extends Program {
         carte.estRetournee = !carte.estRetournee;
     }
 
+    void testRetourner() {
+        Carte carte = newCarte("Bonjour", 1);
+        retourner(carte);
+        assertTrue(carte.estRetournee);
+        retourner(carte);
+        assertFalse(carte.estRetournee);
+    }
+
     /**
      * @param carte
      * @return boolean
@@ -124,7 +135,7 @@ class MemoriseMoi extends Program {
     
     /**
      * @param paquet
-     * Affiche le paquet de cartes
+     * Affiche le paquet de cartes (2 colonnes)
      */
     void afficherPaquet(Carte[][] paquet) {
         clearScreen();
@@ -176,8 +187,9 @@ class MemoriseMoi extends Program {
 
     /**
      * @param paquet
-     * @param carte
-     * @return Carte[]
+     * @param question 
+     * @param reponse
+     * @return Carte[][]
      * Ajoute un couple de cartes au paquet
      */
     Carte[][] add(Carte[][] paquet, Carte question, Carte reponse) {
@@ -204,8 +216,9 @@ class MemoriseMoi extends Program {
     }
 
     /**
-     * @param paquet
-     * @param carte
+     * @param jeuDeCartes
+     * @param question
+     * @param reponse
      * Ajoute un couple de cartes au jeu de cartes
      */
     JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte question, Carte reponse) {
@@ -284,6 +297,11 @@ class MemoriseMoi extends Program {
         }
     }
 
+    /**
+     * @param j
+     * @param paquet
+     * Génère un paquet de cartes
+     */
     void genererPaquet(JeuDeCartes j, Carte[][] paquet) {
         for (int i = 0; i < length(paquet, 1); i++) {
             j = ajouterCarte(j, paquet[i][0], paquet[i][1]);
@@ -302,45 +320,93 @@ class MemoriseMoi extends Program {
         assertEquals("How", jeuDeCartes.paquet[1][1].valeur);
     }
 
+    /**
+     * @param matiere
+     * Joue au jeu
+     */
     void jouer(String matiere) {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
         Carte[][] p = loadCartes("questions/"+matiere+".csv");
         genererPaquet(jeuDeCartes, p);
-        // TABLEAU AVEC UN TEXTE ET UN ID A COTE
-        /*jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1));
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment", 2), newCarte("How", 2));
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("ça va", 3), newCarte("are you", 3));
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bien et toi", 4), newCarte("Fine and you", 4));
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Très bien merci", 5), newCarte("Very well thank you", 5));
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Au revoir", 6), newCarte("Goodbye", 6));
-        */
         melanger(jeuDeCartes.paquet);
         afficherPaquet(jeuDeCartes.paquet);
-        while (jeuDeCartes.nbCartesRestantes > 0) {
-            println("Ligne de la carte à retourner : ");
-            int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
-            println("Colonne de la carte à retourner : ");
-            int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet);
-            retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-            afficherPaquet(jeuDeCartes.paquet);
-            println("Ligne de la carte à retourner : ");
-            int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
-            println("Colonne de la carte à retourner : ");
-            int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet);
-            retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
-            afficherPaquet(jeuDeCartes.paquet);
-            if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
-                appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-                appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
-                jeuDeCartes.nbCartesRestantes -= 2;
-            } else {
-                retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-                retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        println("1. Seul" + '\n' +
+                "2. Contre l'ordinateur");
+        int choix = readInt();
+        if (choix == 1) {
+            while(jeuDeCartes.nbCartesRestantes > 0) {
+                tourDeJeuSeul(jeuDeCartes);
             }
+        } else if (choix == 2) {
+            while(jeuDeCartes.nbCartesRestantes > 0) {
+                tourDeJeuBot(jeuDeCartes);
+            }
+        } else {
+            println("Veuillez saisir un nombre entre 1 et 2");
+            choix = readInt();
         }
     }
 
+    void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
+        tourDeJeuSeul(jeuDeCartes);
+        delay(2000);
+        println("L'ordinateur joue : ");
+        delay(1000);
+        int randomLigne = randomInt(length(jeuDeCartes.paquet));
+        int randomColonne = randomInt(2);
+        retourner(jeuDeCartes.paquet[randomLigne][randomColonne]);
+        afficherPaquet(jeuDeCartes.paquet);
+        delay(1000);
+        int randomLigne2 = randomInt(length(jeuDeCartes.paquet));
+        int randomColonne2 = randomInt(2);
+        retourner(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
+        afficherPaquet(jeuDeCartes.paquet);
+        delay(1000);
+        if (jeuDeCartes.paquet[randomLigne][randomColonne].numId == jeuDeCartes.paquet[randomLigne2][randomColonne2].numId) {
+            appairer(jeuDeCartes.paquet[randomLigne][randomColonne]);
+            appairer(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
+            jeuDeCartes.nbCartesRestantes -= 2;
+        } else {
+            retourner(jeuDeCartes.paquet[randomLigne][randomColonne]);
+            retourner(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
+        }
+    }
+
+    void tourDeJeuSeul(JeuDeCartes jeuDeCartes) {
+        println("A vous de jouer " + pseudo + " :");
+        //println("Ligne de la carte à retourner : ");
+        int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
+        //println("Colonne de la carte à retourner : ");
+        int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet, choixLigne1);
+        retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+        afficherPaquet(jeuDeCartes.paquet);
+        //println("Ligne de la carte à retourner : ");
+        int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
+        //println("Colonne de la carte à retourner : ");
+        int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet, choixLigne2);
+        retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        afficherPaquet(jeuDeCartes.paquet);
+        if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
+            appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+            appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+            jeuDeCartes.nbCartesRestantes -= 2;
+        } else {
+            retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+            retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        }
+    }
+
+    boolean estValide(int ligne, int colonne, Carte[][] paquet) {
+        return ligne >= 0 && ligne < length(paquet) && colonne >= 0 && colonne < 2;
+    }
+
+    /**
+     * @param paquet
+     * @return int
+     * Retourne une saisie de ligne valide
+     */
     int saisieValideLigne(Carte[][] paquet) {
+        println("Ligne de la carte à retourner : ");
         int lignes = length(paquet, 1);
         int res = readInt();
         if (res < 1 || res >= lignes+1) {
@@ -350,13 +416,24 @@ class MemoriseMoi extends Program {
         return res-1;
     }
 
-    int saisieValideColonne(Carte[][] paquet) {
+    /**
+     * @param paquet
+     * @return int
+     * Retourne une saisie de colonne valide
+     */
+    int saisieValideColonne(Carte[][] paquet, int ligneChoisie) {
         int colonnes = length(paquet, 2);
-        int res = readInt();
-        if (res < 1 || res >= colonnes+1) {
-            println("Veuillez saisir un nombre entre 1 et " + colonnes);
+        int res;
+        println("Colonne de la carte à retourner : ");
+        do {
             res = readInt();
-        }
+            if (res < 1 || res >= colonnes+1) {
+                println("Veuillez saisir un nombre entre 1 et " + colonnes);
+            } else if (paquet[ligneChoisie][res-1].estRetournee) {
+                println("Cette carte a déjà été retournée. Veuillez choisir une autre carte.");
+                return saisieValideColonne(paquet, saisieValideLigne(paquet));
+            }
+        } while (res < 1 || res >= colonnes+1 || paquet[ligneChoisie][res-1].estRetournee);
         return res-1;
     }
 
@@ -364,6 +441,10 @@ class MemoriseMoi extends Program {
      * Boucle principale du jeu
      */
     void boucle() {
+        clearScreen();
+        accueil();
+        println("Veuillez saisir votre pseudo : ");
+        pseudo = readString();
         int choix = 0;
         do {
             init();
@@ -372,7 +453,7 @@ class MemoriseMoi extends Program {
                 clearScreen();
                 accueil();
                 println("1. Français" + '\n' +
-                        "2. Histoire" + '\n' +
+                        "2. Maths" + '\n' +
                         "3. Retour");
                 choix = readInt();
                 if (choix == 1) {
