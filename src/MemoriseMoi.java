@@ -349,19 +349,19 @@ class MemoriseMoi extends Program {
 
     void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
         tourDeJeuSeul(jeuDeCartes);
-        delay(2000);
-        println("L'ordinateur joue : ");
         delay(1000);
+        println("L'ordinateur joue : ");
+        delay(500);
         int randomLigne = randomInt(length(jeuDeCartes.paquet));
         int randomColonne = randomInt(2);
         retourner(jeuDeCartes.paquet[randomLigne][randomColonne]);
         afficherPaquet(jeuDeCartes.paquet);
-        delay(1000);
+        delay(500);
         int randomLigne2 = randomInt(length(jeuDeCartes.paquet));
         int randomColonne2 = randomInt(2);
         retourner(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
         afficherPaquet(jeuDeCartes.paquet);
-        delay(1000);
+        delay(500);
         if (jeuDeCartes.paquet[randomLigne][randomColonne].numId == jeuDeCartes.paquet[randomLigne2][randomColonne2].numId) {
             appairer(jeuDeCartes.paquet[randomLigne][randomColonne]);
             appairer(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
