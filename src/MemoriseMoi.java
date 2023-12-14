@@ -2,6 +2,7 @@ import extensions.CSVFile;
 
 class MemoriseMoi extends Program {
     String pseudo;
+    int score;
 
     /**
      * Affiche le menu principal
@@ -335,7 +336,7 @@ class MemoriseMoi extends Program {
         int choix = readInt();
         if (choix == 1) {
             while(jeuDeCartes.nbCartesRestantes > 0) {
-                tourDeJeuSeul(jeuDeCartes);
+                tourDeJeuSeul(jeuDeCartes, score);
             }
         } else if (choix == 2) {
             while(jeuDeCartes.nbCartesRestantes > 0) {
@@ -346,9 +347,11 @@ class MemoriseMoi extends Program {
             choix = readInt();
         }
     }
-
+    
     void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
-        tourDeJeuSeul(jeuDeCartes);
+        int pointsBot = 0;
+        int pointsJoueur = 0;
+        tourDeJeuSeul(jeuDeCartes, pointsJoueur);
         delay(1000);
         println("L'ordinateur joue : ");
         delay(500);
@@ -370,9 +373,19 @@ class MemoriseMoi extends Program {
             retourner(jeuDeCartes.paquet[randomLigne][randomColonne]);
             retourner(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
         }
+        if (jeuDeCartes.nbCartesRestantes == 0) {
+            if (pointsBot > pointsJoueur) {
+                println("L'ordinateur a gagné :/");
+                delay(5000);
+            }
+            if (pointsBot < pointsJoueur) {
+                println("Bravo " + pseudo + " ! Vous avez gagné !");
+                delay(5000);
+            }
+        }
     }
 
-    void tourDeJeuSeul(JeuDeCartes jeuDeCartes) {
+    void tourDeJeuSeul(JeuDeCartes jeuDeCartes, int pointsJoueur) {
         println("A vous de jouer " + pseudo + " :");
         //println("Ligne de la carte à retourner : ");
         int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
@@ -390,9 +403,14 @@ class MemoriseMoi extends Program {
             appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
             appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
             jeuDeCartes.nbCartesRestantes -= 2;
+            pointsJoueur++;
         } else {
             retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
             retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        }
+        if (jeuDeCartes.nbCartesRestantes == 0) {
+            println("Bravo " + pseudo + " ! Vous avez gagné !");
+            delay(5000);
         }
     }
 
