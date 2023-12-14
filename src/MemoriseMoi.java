@@ -302,9 +302,9 @@ class MemoriseMoi extends Program {
         assertEquals("How", jeuDeCartes.paquet[1][1].valeur);
     }
 
-    void jouerFrancais() {
+    void jouer(String matiere) {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        Carte[][] p = loadCartes("questions/français.csv");
+        Carte[][] p = loadCartes("questions/"+matiere+".csv");
         genererPaquet(jeuDeCartes, p);
         // TABLEAU AVEC UN TEXTE ET UN ID A COTE
         /*jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1));
@@ -313,7 +313,8 @@ class MemoriseMoi extends Program {
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bien et toi", 4), newCarte("Fine and you", 4));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Très bien merci", 5), newCarte("Very well thank you", 5));
         jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Au revoir", 6), newCarte("Goodbye", 6));
-        */melanger(jeuDeCartes.paquet);
+        */
+        melanger(jeuDeCartes.paquet);
         afficherPaquet(jeuDeCartes.paquet);
         while (jeuDeCartes.nbCartesRestantes > 0) {
             println("Ligne de la carte à retourner : ");
@@ -375,9 +376,9 @@ class MemoriseMoi extends Program {
                         "3. Retour");
                 choix = readInt();
                 if (choix == 1) {
-                    jouerFrancais();
+                    jouer("français");
                 } else if (choix == 2) {
-                    // Histoire
+                    jouer("maths");
                 } else if (choix == 3) {
                     clearScreen();
                     init();
