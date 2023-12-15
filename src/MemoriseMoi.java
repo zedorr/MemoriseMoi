@@ -61,10 +61,10 @@ class MemoriseMoi extends Program {
         clearScreen();
         println(fileToString("regles.txt"));
         println("1. Retour");
-        int choix = readInt();
-        while (choix != 1) {
+        int choix = readStringNb(); // READ
+        while (choix != 1) { 
             println("1. Retour");
-            choix = readInt();
+            choix = readStringNb(); // READ
         }
         clearScreen();
         init();
@@ -333,7 +333,7 @@ class MemoriseMoi extends Program {
         afficherPaquet(jeuDeCartes.paquet);
         println("1. Seul" + '\n' +
                 "2. Contre l'ordinateur");
-        int choix = readInt();
+        int choix = readStringNb(); // READ
         if (choix == 1) {
             while(jeuDeCartes.nbCartesRestantes > 0) {
                 tourDeJeuSeul(jeuDeCartes, score);
@@ -344,7 +344,7 @@ class MemoriseMoi extends Program {
             }
         } else {
             println("Veuillez saisir un nombre entre 1 et 2");
-            choix = readInt();
+            choix = readStringNb(); // READ
         }
     }
     
@@ -383,6 +383,30 @@ class MemoriseMoi extends Program {
                 delay(5000);
             }
         }
+    }
+
+    int readStringNb() {
+        boolean bon = false;
+        String entree = readString();
+        while (!bon) {
+            bon = true;
+            int number = 0;
+            for (int i = 0; i < length(entree); i++) {
+                char c = charAt(entree, i);
+                if (c < '0' || c > '9') {
+                    bon = false;
+                    break;
+                }
+                number = number * 10 + (c - '0');
+            }
+            if (!bon) {
+                println("Veuillez saisir un nombre");
+                entree = readString();
+            } else {
+                return number;
+            }
+        }
+        return -1;
     }
 
     void tourDeJeuSeul(JeuDeCartes jeuDeCartes, int pointsJoueur) {
@@ -426,10 +450,10 @@ class MemoriseMoi extends Program {
     int saisieValideLigne(Carte[][] paquet) {
         println("Ligne de la carte à retourner : ");
         int lignes = length(paquet, 1);
-        int res = readInt();
+        int res = readStringNb(); // READ
         if (res < 1 || res >= lignes+1) {
             println("Veuillez saisir un nombre entre 1 et " + lignes);
-            res = readInt();
+            res = readStringNb(); // READ
         }
         return res-1;
     }
@@ -444,7 +468,7 @@ class MemoriseMoi extends Program {
         int res;
         println("Colonne de la carte à retourner : ");
         do {
-            res = readInt();
+            res = readStringNb();
             if (res < 1 || res >= colonnes+1) {
                 println("Veuillez saisir un nombre entre 1 et " + colonnes);
             } else if (paquet[ligneChoisie][res-1].estRetournee) {
@@ -466,14 +490,14 @@ class MemoriseMoi extends Program {
         int choix = 0;
         do {
             init();
-            choix = readInt();
+            choix = readStringNb(); // READ
             if (choix == 1) {
                 clearScreen();
                 accueil();
                 println("1. Français" + '\n' +
                         "2. Maths" + '\n' +
                         "3. Retour");
-                choix = readInt();
+                choix = readStringNb(); // READ
                 if (choix == 1) {
                     jouer("français");
                 } else if (choix == 2) {
