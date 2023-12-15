@@ -3,7 +3,7 @@ import extensions.CSVFile;
 class MemoriseMoi extends Program {
     String pseudo;
     int score;
-
+    
     /**
      * Affiche le menu principal
      */
@@ -37,7 +37,7 @@ class MemoriseMoi extends Program {
                 "ça va\n" +
                 "Bien et toi\n" +
                 "Très bien merci\n" +
-                "Au revoir\n", fileToString("test.txt"));
+                "Au revoir\n", fileToString("ressources/test.txt"));
     }
     
 
@@ -46,7 +46,7 @@ class MemoriseMoi extends Program {
      */
     void accueil() {
         clearScreen();
-        println(fileToString("titre.txt"));
+        println(fileToString("ressources/titre.txt"));
         text("green");
         println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
                 "■           Choix           ■" + '\n' +
@@ -59,7 +59,7 @@ class MemoriseMoi extends Program {
      */
     void afficherRegles() {
         clearScreen();
-        println(fileToString("regles.txt"));
+        println(fileToString("ressources/regles.txt"));
         println("1. Retour");
         int choix = readStringNb(); // READ
         while (choix != 1) { 
@@ -76,7 +76,7 @@ class MemoriseMoi extends Program {
      */
     void auRevoir() {
         clearScreen();
-        println(fileToString("aurevoir.txt"));
+        println(fileToString("ressources/aurevoir.txt"));
     }
 
     /**
