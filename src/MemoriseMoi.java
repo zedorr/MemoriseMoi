@@ -376,11 +376,11 @@ class MemoriseMoi extends Program {
         if (jeuDeCartes.nbCartesRestantes == 0) {
             if (pointsBot > pointsJoueur) {
                 println("L'ordinateur a gagné :/");
-                delay(5000);
+                delay(3000);
             }
             if (pointsBot < pointsJoueur) {
                 println("Bravo " + pseudo + " ! Vous avez gagné !");
-                delay(5000);
+                delay(3000);
             }
         }
     }
@@ -434,7 +434,7 @@ class MemoriseMoi extends Program {
         }
         if (jeuDeCartes.nbCartesRestantes == 0) {
             println("Bravo " + pseudo + " ! Vous avez gagné !");
-            delay(5000);
+            delay(3000);
         }
     }
 

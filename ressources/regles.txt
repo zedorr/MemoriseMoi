@@ -1,17 +1,31 @@
-- Le jeu comporte un nombre pair de cartes, l'objectif est d'associer chaque question à sa réponse
+Memory en mode solo ou contre l'ordinateur - Règles du jeu
 
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
+Matériel:
+Un ensemble de cartes (paires d'images ou de nombres) représentées par des symboles dans le terminal.
 
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
+Objectif:
+Trouver toutes les paires de cartes.
 
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
-- AAAAAAAAAAAAAAAAAAAAAAAAAAA
+Déroulement du jeu:
+
+- Lorsque le jeu commence, toutes les cartes sont mélangées et disposées face cachée.
+- Le joueur ou l'ordinateur peut retourner deux cartes à la fois pour les révéler.
+- Si les deux cartes révélées correspondent, elles restent découvertes. Sinon, elles sont retournées face cachée.
+- Le joueur continue à retourner deux cartes à la fois jusqu'à ce que toutes les paires soient trouvées.
+
+Tour du joueur:
+
+- Le joueur choisit deux cartes en entrant les coordonnées des cartes à retourner (par exemple, "A1" et "B3").
+- Les cartes choisies sont révélées.
+
+Tour de l'ordinateur:
+
+- L'ordinateur choisit automatiquement deux cartes.
+- Les cartes choisies sont révélées.
+- L'ordinateur vérifie si les cartes correspondent.
+
+Fin du jeu:
+Le jeu se termine lorsque toutes les paires de cartes ont été trouvées.
+
+Commandes du joueur:
+Les coordonnées des cartes peuvent être entrées sous la forme "LettreChiffre" (par exemple, "A1", "B2").
