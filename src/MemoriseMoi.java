@@ -161,10 +161,13 @@ class MemoriseMoi extends Program {
                     affichage = affichage + "|          ?          |";
                 }
             }
-            affichage = affichage + '\n';
+            int indice = i+1; 
+            affichage = affichage + "  " + indice + '\n';
             affichage = affichage + "|                     |" + "|                     |" + '\n';
             affichage = affichage + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + '\n';
+            
         }
+        affichage = affichage + "          a            " + "           b           " + '\n';
         println(affichage);
     }
     
@@ -273,7 +276,7 @@ class MemoriseMoi extends Program {
      * Génère un nombre aléatoire entre 0 et max
      */
     int randomInt(int max) {
-        return (int) (random() * max);
+        return (int)(random() * max);
     }
 
     void testRandomInt() {
@@ -352,26 +355,28 @@ class MemoriseMoi extends Program {
         int pointsBot = 0;
         int pointsJoueur = 0;
         tourDeJeuSeul(jeuDeCartes, pointsJoueur);
-        delay(1000);
+        delay(500);
         println("L'ordinateur joue : ");
         delay(500);
-        int randomLigne = randomInt(length(jeuDeCartes.paquet));
-        int randomColonne = randomInt(2);
-        retourner(jeuDeCartes.paquet[randomLigne][randomColonne]);
+        int[] saisie1 = saisieAleatoireBot(jeuDeCartes.paquet);
+        int lig1 = saisie1[0];
+        int col1 = saisie1[1];
+        retourner(jeuDeCartes.paquet[lig1][col1]);
         afficherPaquet(jeuDeCartes.paquet);
         delay(500);
-        int randomLigne2 = randomInt(length(jeuDeCartes.paquet));
-        int randomColonne2 = randomInt(2);
-        retourner(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
+        int[] saisie2 = saisieAleatoireBot(jeuDeCartes.paquet);
+        int lig2 = saisie2[0];
+        int col2 = saisie2[1];
+        retourner(jeuDeCartes.paquet[lig2][col2]);
         afficherPaquet(jeuDeCartes.paquet);
         delay(500);
-        if (jeuDeCartes.paquet[randomLigne][randomColonne].numId == jeuDeCartes.paquet[randomLigne2][randomColonne2].numId) {
-            appairer(jeuDeCartes.paquet[randomLigne][randomColonne]);
-            appairer(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
+        if (jeuDeCartes.paquet[lig1][col1].numId == jeuDeCartes.paquet[lig2][col2].numId) {
+            appairer(jeuDeCartes.paquet[lig1][col1]);
+            appairer(jeuDeCartes.paquet[lig2][col2]);
             jeuDeCartes.nbCartesRestantes -= 2;
         } else {
-            retourner(jeuDeCartes.paquet[randomLigne][randomColonne]);
-            retourner(jeuDeCartes.paquet[randomLigne2][randomColonne2]);
+            retourner(jeuDeCartes.paquet[lig1][col1]);
+            retourner(jeuDeCartes.paquet[lig2][col2]);
         }
         if (jeuDeCartes.nbCartesRestantes == 0) {
             if (pointsBot > pointsJoueur) {
@@ -438,8 +443,22 @@ class MemoriseMoi extends Program {
         }
     }
 
-    boolean estValide(int ligne, int colonne, Carte[][] paquet) {
-        return ligne >= 0 && ligne < length(paquet) && colonne >= 0 && colonne < 2;
+    /**
+     * @param paquet
+     * @return int[]
+     * Retourne un tableau avec 2 valeurs, l'indice de la ligne à l'indice 0 et l'indice de la colonne à l'indice 1    
+     */
+    int[] saisieAleatoireBot(Carte[][] paquet) {
+        int[] res = new int[]{-1,-1};
+        int randomLigne = randomInt(length(paquet,1));
+        int randomColonne = randomInt(2);
+        while (paquet[randomLigne][randomColonne].estRetournee) {
+            randomLigne = randomInt(length(paquet,1));
+            randomColonne = randomInt(2);
+        }
+        res[0] = randomLigne;
+        res[1] = randomColonne;
+        return res;
     }
 
     /**
@@ -465,18 +484,18 @@ class MemoriseMoi extends Program {
      */
     int saisieValideColonne(Carte[][] paquet, int ligneChoisie) {
         int colonnes = length(paquet, 2);
-        int res;
+        String res;
         println("Colonne de la carte à retourner : ");
         do {
-            res = readStringNb();
-            if (res < 1 || res >= colonnes+1) {
-                println("Veuillez saisir un nombre entre 1 et " + colonnes);
-            } else if (paquet[ligneChoisie][res-1].estRetournee) {
+            res = readString().toLowerCase();
+            if (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) > 'a'+colonnes-1) {
+                println("Veuillez saisir une lettre entre a et " + (char)(colonnes-1+'a'));
+            } else if (paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee) {
                 println("Cette carte a déjà été retournée. Veuillez choisir une autre carte.");
                 return saisieValideColonne(paquet, saisieValideLigne(paquet));
             }
-        } while (res < 1 || res >= colonnes+1 || paquet[ligneChoisie][res-1].estRetournee);
-        return res-1;
+        } while (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) >= 'a' + colonnes || paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee);
+        return (charAt(res,0) - 'a');
     }
 
     /**

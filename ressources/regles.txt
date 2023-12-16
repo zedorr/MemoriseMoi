@@ -15,7 +15,7 @@ Déroulement du jeu:
 
 Tour du joueur:
 
-- Le joueur choisit deux cartes en entrant les coordonnées des cartes à retourner (par exemple, "A1" et "B3").
+- Le joueur choisit deux cartes en entrant d'abord les coordonnées de la ligne puis les coordonnées de la colonne des cartes à retourner.
 - Les cartes choisies sont révélées.
 
 Tour de l'ordinateur:
@@ -26,6 +26,3 @@ Tour de l'ordinateur:
 
 Fin du jeu:
 Le jeu se termine lorsque toutes les paires de cartes ont été trouvées.
-
-Commandes du joueur:
-Les coordonnées des cartes peuvent être entrées sous la forme "LettreChiffre" (par exemple, "A1", "B2").
