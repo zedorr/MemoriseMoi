@@ -351,32 +351,45 @@ class MemoriseMoi extends Program {
         }
     }
     
+    boolean jeuFini(Carte[][] p) {
+        for (int i=0; i<length(p, 1); i++) {
+            for (int j=0; j<length(p, 2); j++) {
+                if (!p[i][j].estRetournee) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
         int pointsBot = 0;
         int pointsJoueur = 0;
         tourDeJeuSeul(jeuDeCartes, pointsJoueur);
         delay(500);
-        println("L'ordinateur joue : ");
-        delay(500);
-        int[] saisie1 = saisieAleatoireBot(jeuDeCartes.paquet);
-        int lig1 = saisie1[0];
-        int col1 = saisie1[1];
-        retourner(jeuDeCartes.paquet[lig1][col1]);
-        afficherPaquet(jeuDeCartes.paquet);
-        delay(500);
-        int[] saisie2 = saisieAleatoireBot(jeuDeCartes.paquet);
-        int lig2 = saisie2[0];
-        int col2 = saisie2[1];
-        retourner(jeuDeCartes.paquet[lig2][col2]);
-        afficherPaquet(jeuDeCartes.paquet);
-        delay(500);
-        if (jeuDeCartes.paquet[lig1][col1].numId == jeuDeCartes.paquet[lig2][col2].numId) {
-            appairer(jeuDeCartes.paquet[lig1][col1]);
-            appairer(jeuDeCartes.paquet[lig2][col2]);
-            jeuDeCartes.nbCartesRestantes -= 2;
-        } else {
+        if (jeuDeCartes.nbCartesRestantes > 0) {
+            println("L'ordinateur joue : ");
+            delay(500);
+            int[] saisie1 = saisieAleatoireBot(jeuDeCartes.paquet);
+            int lig1 = saisie1[0];
+            int col1 = saisie1[1];
             retourner(jeuDeCartes.paquet[lig1][col1]);
+            afficherPaquet(jeuDeCartes.paquet);
+            delay(500);
+            int[] saisie2 = saisieAleatoireBot(jeuDeCartes.paquet);
+            int lig2 = saisie2[0];
+            int col2 = saisie2[1];
             retourner(jeuDeCartes.paquet[lig2][col2]);
+            afficherPaquet(jeuDeCartes.paquet);
+            delay(500);
+            if (jeuDeCartes.paquet[lig1][col1].numId == jeuDeCartes.paquet[lig2][col2].numId) {
+                appairer(jeuDeCartes.paquet[lig1][col1]);
+                appairer(jeuDeCartes.paquet[lig2][col2]);
+                jeuDeCartes.nbCartesRestantes -= 2;
+            } else {
+                retourner(jeuDeCartes.paquet[lig1][col1]);
+                retourner(jeuDeCartes.paquet[lig2][col2]);
+            }
         }
         if (jeuDeCartes.nbCartesRestantes == 0) {
             if (pointsBot > pointsJoueur) {
@@ -452,7 +465,7 @@ class MemoriseMoi extends Program {
         int[] res = new int[]{-1,-1};
         int randomLigne = randomInt(length(paquet,1));
         int randomColonne = randomInt(2);
-        while (paquet[randomLigne][randomColonne].estRetournee) {
+        while (paquet[randomLigne][randomColonne].estRetournee || paquet[randomLigne][randomColonne].estAppariee) {
             randomLigne = randomInt(length(paquet,1));
             randomColonne = randomInt(2);
         }
@@ -542,3 +555,6 @@ class MemoriseMoi extends Program {
         auRevoir();
     }
 }
+
+// afichage plusieurs cartes par ligne
+// couleur selon joueur ou bot
