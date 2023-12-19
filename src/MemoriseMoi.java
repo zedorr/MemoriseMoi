@@ -48,9 +48,7 @@ class MemoriseMoi extends Program {
         clearScreen();
         println(fileToString("ressources/titre.txt"));
         text("green");
-        println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
-                "■           Choix           ■" + '\n' +
-                "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+        println(fileToString("ressources/choix.txt"));
         reset();
     }
 
@@ -136,15 +134,15 @@ class MemoriseMoi extends Program {
     
     /**
      * @param paquet
-     * Affiche le paquet de cartes (2 colonnes)
+     * Affiche le paquet de cartes (4 cartes par colonnes)
      */
     void afficherPaquet(Carte[][] paquet) {
         clearScreen();
         String affichage = "";
         for (int i = 0; i < length(paquet); i++) {
-            affichage = affichage + " _____________________ " + " _____________________ " + '\n';
-            affichage = affichage + "|                     |" + "|                     |" + '\n';
-            for (int j = 0; j < 2; j++) {
+            affichage = affichage + " _____________________ " + " _____________________ " + " _____________________ " + " _____________________ " + '\n';
+            affichage = affichage + "|                     |" + "|                     |" + "|                     |" + "|                     |" + '\n';
+            for (int j = 0; j < 4; j++) {
                 if (paquet[i][j].estRetournee) {
                     String valeur = paquet[i][j].valeur;
                     String espacesGauche = "";
@@ -163,11 +161,11 @@ class MemoriseMoi extends Program {
             }
             int indice = i+1; 
             affichage = affichage + "  " + indice + '\n';
-            affichage = affichage + "|                     |" + "|                     |" + '\n';
-            affichage = affichage + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + '\n';
+            affichage = affichage + "|                     |" + "|                     |" + "|                     |" + "|                     |" + '\n';
+            affichage = affichage + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + '\n';
             
         }
-        affichage = affichage + "          a            " + "           b           " + '\n';
+        affichage = affichage + "          a            " + "           b           " + "          c            " + "           d           " + '\n';
         println(affichage);
     }
     
@@ -194,57 +192,54 @@ class MemoriseMoi extends Program {
      * @param question 
      * @param reponse
      * @return Carte[][]
-     * Ajoute un couple de cartes au paquet
+     * Ajoute 2 couple de cartes au paquet
      */
-    Carte[][] add(Carte[][] paquet, Carte question, Carte reponse) {
-        Carte[][] res = new Carte[length(paquet)+1][2];
+    Carte[][] add(Carte[][] paquet, Carte question, Carte reponse, Carte question2, Carte reponse2) {
+        Carte[][] res = new Carte[length(paquet,1)+1][4];
         for (int i = 0; i < length(paquet); i++) {
-            res[i][0] = paquet[i][0];
-            res[i][1] = paquet[i][1];
+            for (int j = 0; j < 4; j++) {
+                res[i][j] = paquet[i][j];
+            }
         }
         res[length(paquet)][0] = question;
         res[length(paquet)][1] = reponse;
+        res[length(paquet)][2] = question2;
+        res[length(paquet)][3] = reponse2;
         return res;
     }
 
     void testAdd() {
         Carte[][] paquet = new Carte[0][0];
-        paquet = add(paquet, newCarte("Bonjour", 1), newCarte("Hello", 1));
+        paquet = add(paquet, newCarte("Bonjour", 1), newCarte("Hello", 1), newCarte("Comment", 2), newCarte("How", 2));
         assertEquals(1, length(paquet));
         assertEquals("Bonjour", paquet[0][0].valeur);
         assertEquals("Hello", paquet[0][1].valeur);
-        paquet = add(paquet, newCarte("Comment", 2), newCarte("How", 2));
-        assertEquals(2, length(paquet));
-        assertEquals("Comment", paquet[1][0].valeur);
-        assertEquals("How", paquet[1][1].valeur);
+        assertEquals("Comment", paquet[0][2].valeur);
+        assertEquals("How", paquet[0][3].valeur);
     }
 
     /**
      * @param jeuDeCartes
      * @param question
      * @param reponse
-     * Ajoute un couple de cartes au jeu de cartes
+     * Ajoute 2 couple de cartes au jeu de cartes
      */
-    JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte question, Carte reponse) {
-        jeuDeCartes.nbCartes+=2;
-        jeuDeCartes.nbCartesRestantes+=2;
-        jeuDeCartes.paquet = add(jeuDeCartes.paquet, question, reponse);
+    JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte question, Carte reponse, Carte question2, Carte reponse2) {
+        jeuDeCartes.nbCartes+=4;
+        jeuDeCartes.nbCartesRestantes+=4;
+        jeuDeCartes.paquet = add(jeuDeCartes.paquet, question, reponse, question2, reponse2);
         return jeuDeCartes;
     }
     
     void testAjouterCarte() {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1));
-        assertEquals(2, jeuDeCartes.nbCartes);
-        assertEquals(2, jeuDeCartes.nbCartesRestantes);
-        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
-        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
-        assertEquals(1, jeuDeCartes.paquet[0][0].numId);
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Comment", 2), newCarte("How", 2));
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1), newCarte("Comment", 2), newCarte("How", 2));
         assertEquals(4, jeuDeCartes.nbCartes);
         assertEquals(4, jeuDeCartes.nbCartesRestantes);
-        assertEquals("Comment", jeuDeCartes.paquet[1][0].valeur);
-        assertEquals("How", jeuDeCartes.paquet[1][1].valeur);
+        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
+        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
+        assertEquals("Comment", jeuDeCartes.paquet[0][2].valeur);
+        assertEquals("How", jeuDeCartes.paquet[0][3].valeur);
     }
 
     /**
@@ -253,10 +248,15 @@ class MemoriseMoi extends Program {
      */
     Carte[][] loadCartes(String nomFichier) {
         CSVFile f = loadCSV(nomFichier);
-        Carte[][] res = new Carte[rowCount(f)][2];
-        for (int i = 0; i < rowCount(f); i++) {
-            for (int j = 0; j < 2; j++) {
-                res[i][j] = newCarte(getCell(f, i, j), i);
+        int rowCount = rowCount(f);    
+        Carte[][] res = new Carte[rowCount][4];
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount(f, i); j++) {
+                if (j < 2) {
+                    res[i][j] = newCarte(getCell(f, i, j), i);
+                } else {
+                    res[i][j] = newCarte(getCell(f, i, j), i+rowCount);
+                }
             }
         }
         return res;
@@ -266,8 +266,8 @@ class MemoriseMoi extends Program {
         Carte[][] paquet = loadCartes("questions/test.csv");
         assertEquals("Bonjour", paquet[0][0].valeur);
         assertEquals("Hello", paquet[0][1].valeur);
-        assertEquals(0, paquet[0][0].numId);
-        assertEquals(0, paquet[0][1].numId);
+        assertEquals(paquet[0][2].numId, paquet[0][3].numId);
+        assertEquals("Comment", paquet[0][2].valeur);
     }
 
     /**
@@ -290,10 +290,10 @@ class MemoriseMoi extends Program {
      * Mélange le paquet de cartes
      */
     void melanger(Carte[][] paquet) {
-        for (int i = 0; i < length(paquet); i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < length(paquet,1); i++) {
+            for (int j = 0; j < 4; j++) {
                 int randomLigne = randomInt(length(paquet));
-                int randomColonne = randomInt(2);
+                int randomColonne = randomInt(4);
                 Carte temp = paquet[i][j];
                 paquet[i][j] = paquet[randomLigne][randomColonne];
                 paquet[randomLigne][randomColonne] = temp;
@@ -308,7 +308,7 @@ class MemoriseMoi extends Program {
      */
     void genererPaquet(JeuDeCartes j, Carte[][] paquet) {
         for (int i = 0; i < length(paquet, 1); i++) {
-            j = ajouterCarte(j, paquet[i][0], paquet[i][1]);
+            j = ajouterCarte(j, paquet[i][0], paquet[i][1], paquet[i][2], paquet[i][3]);
         }
     }
 
@@ -316,12 +316,12 @@ class MemoriseMoi extends Program {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
         Carte[][] paquet = loadCartes("questions/test.csv");
         genererPaquet(jeuDeCartes, paquet);
-        assertEquals(4, jeuDeCartes.nbCartes);
-        assertEquals(4, jeuDeCartes.nbCartesRestantes);
+        assertEquals(8, jeuDeCartes.nbCartes);
+        assertEquals(8, jeuDeCartes.nbCartesRestantes);
         assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
         assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
-        assertEquals("Comment", jeuDeCartes.paquet[1][0].valeur);
-        assertEquals("How", jeuDeCartes.paquet[1][1].valeur);
+        assertEquals("Comment", jeuDeCartes.paquet[0][2].valeur);
+        assertEquals("How", jeuDeCartes.paquet[0][3].valeur);
     }
 
     /**
@@ -335,7 +335,8 @@ class MemoriseMoi extends Program {
         melanger(jeuDeCartes.paquet);
         afficherPaquet(jeuDeCartes.paquet);
         println("1. Seul" + '\n' +
-                "2. Contre l'ordinateur");
+                "2. Contre l'ordinateur" + '\n' +
+                "3. Retour");
         int choix = readStringNb(); // READ
         if (choix == 1) {
             while(jeuDeCartes.nbCartesRestantes > 0) {
@@ -345,8 +346,12 @@ class MemoriseMoi extends Program {
             while(jeuDeCartes.nbCartesRestantes > 0) {
                 tourDeJeuBot(jeuDeCartes);
             }
+        } else if (choix == 3) {
+            clearScreen();
+            init();
+            choix = 1;
         } else {
-            println("Veuillez saisir un nombre entre 1 et 2");
+            println("Veuillez saisir un nombre entre 1 et 3");
             choix = readStringNb(); // READ
         }
     }
@@ -451,10 +456,10 @@ class MemoriseMoi extends Program {
     int[] saisieAleatoireBot(Carte[][] paquet) {
         int[] res = new int[]{-1,-1};
         int randomLigne = randomInt(length(paquet,1));
-        int randomColonne = randomInt(2);
+        int randomColonne = randomInt(4);
         while (paquet[randomLigne][randomColonne].estRetournee) {
             randomLigne = randomInt(length(paquet,1));
-            randomColonne = randomInt(2);
+            randomColonne = randomInt(4);
         }
         res[0] = randomLigne;
         res[1] = randomColonne;
