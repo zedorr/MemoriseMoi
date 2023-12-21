@@ -616,6 +616,7 @@ class MemoriseMoi extends Program {
     }
 
     // TESTS
+    
     void testInt2String() {
         assertEquals("123", int2String(123));
         assertEquals("0", int2String(0));
