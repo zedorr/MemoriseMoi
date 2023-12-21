@@ -2,7 +2,7 @@ import extensions.CSVFile;
 
 class MemoriseMoi extends Program {
     String pseudo;
-    int score;
+    int score = 0;
     
     /**
      * Affiche le menu principal
@@ -40,7 +40,6 @@ class MemoriseMoi extends Program {
                 "Au revoir\n", fileToString("ressources/test.txt"));
     }
     
-
     /**
      * Affiche le menu d'accueil
      */
@@ -59,15 +58,14 @@ class MemoriseMoi extends Program {
         clearScreen();
         println(fileToString("ressources/regles.txt"));
         println("1. Retour");
-        int choix = readStringNb(); // READ
+        int choix = readStringNb(); 
         while (choix != 1) { 
             println("1. Retour");
-            choix = readStringNb(); // READ
+            choix = readStringNb();
         }
         clearScreen();
         init();
     }
-
 
     /**
      * Affiche un texte d'au revoir
@@ -191,6 +189,8 @@ class MemoriseMoi extends Program {
      * @param paquet
      * @param question 
      * @param reponse
+     * @param question2
+     * @param reponse2
      * @return Carte[][]
      * Ajoute 2 couple de cartes au paquet
      */
@@ -222,6 +222,8 @@ class MemoriseMoi extends Program {
      * @param jeuDeCartes
      * @param question
      * @param reponse
+     * @param question2
+     * @param reponse2
      * Ajoute 2 couple de cartes au jeu de cartes
      */
     JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte question, Carte reponse, Carte question2, Carte reponse2) {
@@ -331,16 +333,19 @@ class MemoriseMoi extends Program {
     void jouer(String matiere) {
         JeuDeCartes jeuDeCartes = newJeuDeCartes();
         Carte[][] p = loadCartes("questions/"+matiere+".csv");
+
         genererPaquet(jeuDeCartes, p);
         melanger(jeuDeCartes.paquet);
         afficherPaquet(jeuDeCartes.paquet);
+
         println("1. Seul" + '\n' +
                 "2. Contre l'ordinateur" + '\n' +
                 "3. Retour");
-        int choix = readStringNb(); // READ
+
+        int choix = readStringNb();
         if (choix == 1) {
             while(jeuDeCartes.nbCartesRestantes > 0) {
-                tourDeJeuSeul(jeuDeCartes, score);
+                tourDeJeuSeul(jeuDeCartes);
             }
         } else if (choix == 2) {
             while(jeuDeCartes.nbCartesRestantes > 0) {
@@ -352,62 +357,14 @@ class MemoriseMoi extends Program {
             choix = 1;
         } else {
             println("Veuillez saisir un nombre entre 1 et 3");
-            choix = readStringNb(); // READ
-        }
-    }
-    
-    boolean jeuFini(Carte[][] p) {
-        for (int i=0; i<length(p, 1); i++) {
-            for (int j=0; j<length(p, 2); j++) {
-                if (!p[i][j].estRetournee) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
-        int pointsBot = 0;
-        int pointsJoueur = 0;
-        tourDeJeuSeul(jeuDeCartes, pointsJoueur);
-        delay(500);
-        if (jeuDeCartes.nbCartesRestantes > 0) {
-            println("L'ordinateur joue : ");
-            delay(500);
-            int[] saisie1 = saisieAleatoireBot(jeuDeCartes.paquet);
-            int lig1 = saisie1[0];
-            int col1 = saisie1[1];
-            retourner(jeuDeCartes.paquet[lig1][col1]);
-            afficherPaquet(jeuDeCartes.paquet);
-            delay(500);
-            int[] saisie2 = saisieAleatoireBot(jeuDeCartes.paquet);
-            int lig2 = saisie2[0];
-            int col2 = saisie2[1];
-            retourner(jeuDeCartes.paquet[lig2][col2]);
-            afficherPaquet(jeuDeCartes.paquet);
-            delay(500);
-            if (jeuDeCartes.paquet[lig1][col1].numId == jeuDeCartes.paquet[lig2][col2].numId) {
-                appairer(jeuDeCartes.paquet[lig1][col1]);
-                appairer(jeuDeCartes.paquet[lig2][col2]);
-                jeuDeCartes.nbCartesRestantes -= 2;
-            } else {
-                retourner(jeuDeCartes.paquet[lig1][col1]);
-                retourner(jeuDeCartes.paquet[lig2][col2]);
-            }
-        }
-        if (jeuDeCartes.nbCartesRestantes == 0) {
-            if (pointsBot > pointsJoueur) {
-                println("L'ordinateur a gagné :/");
-                delay(3000);
-            }
-            if (pointsBot < pointsJoueur) {
-                println("Bravo " + pseudo + " ! Vous avez gagné !");
-                delay(3000);
-            }
+            choix = readStringNb();
         }
     }
 
+    /**
+     * @return int
+     * Controle que l'entrée est bien un entier
+     */
     int readStringNb() {
         boolean bon = false;
         String entree = readString();
@@ -432,32 +389,140 @@ class MemoriseMoi extends Program {
         return -1;
     }
 
-    void tourDeJeuSeul(JeuDeCartes jeuDeCartes, int pointsJoueur) {
+    /**
+     * @param p
+     * @return boolean
+     * Vérifie si le jeu est fini
+     */
+    boolean jeuFini(Carte[][] p) {
+        for (int i=0; i<length(p, 1); i++) {
+            for (int j=0; j<length(p, 2); j++) {
+                if (!p[i][j].estRetournee) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    void testJeuFini() {
+        Carte[][] paquet = loadCartes("questions/test.csv");
+        assertFalse(jeuFini(paquet));
+        for (int i=0; i<length(paquet, 1); i++) {
+            for (int j=0; j<length(paquet, 2); j++) {
+                retourner(paquet[i][j]);
+            }
+        }
+        assertTrue(jeuFini(paquet));
+    }
+
+    /**
+     * @param jeuDeCartes
+     * tour de jeu avec l'ordinateur
+     */
+    void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
+        int pointsBot = 0;
+        int pointsJoueur = 0;
+
         println("A vous de jouer " + pseudo + " :");
-        //println("Ligne de la carte à retourner : ");
         int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
-        //println("Colonne de la carte à retourner : ");
         int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet, choixLigne1);
         retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
         afficherPaquet(jeuDeCartes.paquet);
-        //println("Ligne de la carte à retourner : ");
+
         int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
-        //println("Colonne de la carte à retourner : ");
         int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet, choixLigne2);
         retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
         afficherPaquet(jeuDeCartes.paquet);
+
         if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
             appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
             appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
             jeuDeCartes.nbCartesRestantes -= 2;
-            pointsJoueur++;
+            pointsJoueur=pointsJoueur+1;
         } else {
             retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
             retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
         }
+
+        delay(1000);
+
+        if (jeuDeCartes.nbCartesRestantes > 0) {
+            println("L'ordinateur joue : ");
+            delay(1000);
+
+            int[] saisie1 = saisieAleatoireBot(jeuDeCartes.paquet);
+            int lig1 = saisie1[0];
+            int col1 = saisie1[1];
+            retourner(jeuDeCartes.paquet[lig1][col1]);
+            afficherPaquet(jeuDeCartes.paquet);
+
+            delay(1000);
+            
+            int[] saisie2 = saisieAleatoireBot(jeuDeCartes.paquet);
+            int lig2 = saisie2[0];
+            int col2 = saisie2[1];
+            retourner(jeuDeCartes.paquet[lig2][col2]);
+            
+            afficherPaquet(jeuDeCartes.paquet);
+            
+            delay(1000);
+            
+            if (jeuDeCartes.paquet[lig1][col1].numId == jeuDeCartes.paquet[lig2][col2].numId) {
+                appairer(jeuDeCartes.paquet[lig1][col1]);
+                appairer(jeuDeCartes.paquet[lig2][col2]);
+                jeuDeCartes.nbCartesRestantes -= 2;
+                pointsBot=pointsBot+1;
+            } else {
+                retourner(jeuDeCartes.paquet[lig1][col1]);
+                retourner(jeuDeCartes.paquet[lig2][col2]);
+            }
+        }
+
+        if (jeuDeCartes.nbCartesRestantes == 0) {
+            println("Fin de la partie !");
+            delay(1000);
+            if (pointsBot > pointsJoueur) {
+                println("L'ordinateur a gagné :/");
+                delay(2000);
+            }
+            if (pointsBot < pointsJoueur) {
+                println("Bravo " + pseudo + " ! Vous avez gagné !");
+                delay(2000);
+                score=score+1;
+            }
+        }
+    }
+
+    /**
+     * @param jeuDeCartes
+     * tour de jeu avec seulement l'utilisateur
+     */
+    void tourDeJeuSeul(JeuDeCartes jeuDeCartes) {
+        println("A vous de jouer " + pseudo + " :");
+        int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
+        int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet, choixLigne1);
+        retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+        afficherPaquet(jeuDeCartes.paquet);
+
+        int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
+        int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet, choixLigne2);
+        retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        afficherPaquet(jeuDeCartes.paquet);
+
+        if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
+            appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+            appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+            jeuDeCartes.nbCartesRestantes -= 2;
+        } else {
+            retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+            retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        }
+
         if (jeuDeCartes.nbCartesRestantes == 0) {
             println("Bravo " + pseudo + " ! Vous avez gagné !");
             delay(3000);
+            score=score+1;
         }
     }
 
@@ -487,10 +552,10 @@ class MemoriseMoi extends Program {
     int saisieValideLigne(Carte[][] paquet) {
         println("Ligne de la carte à retourner : ");
         int lignes = length(paquet, 1);
-        int res = readStringNb(); // READ
+        int res = readStringNb();
         if (res < 1 || res >= lignes+1) {
             println("Veuillez saisir un nombre entre 1 et " + lignes);
-            res = readStringNb(); // READ
+            res = readStringNb();
         }
         return res-1;
     }
@@ -517,6 +582,85 @@ class MemoriseMoi extends Program {
     }
 
     /**
+     * @param s
+     * @return int
+     * Convertit un String en entier
+     */
+    int string2Int(String s) {
+        int res = 0;
+        for (int i = 0; i < length(s); i++) {
+            res = res * 10 + (charAt(s, i) - '0');
+        }
+        return res;
+    }
+
+    void testString2Int() {
+        assertEquals(123, string2Int("123"));
+        assertEquals(0, string2Int("0"));
+        assertEquals(1, string2Int("1"));
+        assertEquals(10, string2Int("10"));
+    }
+
+    /**
+     * @param i
+     * @return String
+     * Convertit un entier en String
+     */
+    String int2String(int i) {
+        return "" + i;
+    }
+
+    void testInt2String() {
+        assertEquals("123", int2String(123));
+        assertEquals("0", int2String(0));
+        assertEquals("1", int2String(1));
+        assertEquals("10", int2String(10));
+    }
+
+    /**
+     * @param paquet
+     * @param question 
+     * @param reponse
+     * @return Carte[][]
+     * Ajoute 2 couple de cartes au paquet
+     */
+    String[][] add(String[][] tab, String pseudo, String score) {
+        String[][] res = new String[length(tab,1)+1][2];
+        for (int i = 0; i < length(tab); i++) {
+            for (int j = 0; j < 2; j++) {
+                res[i][j] = tab[i][j];
+            }
+        }
+        res[length(tab)][0] = pseudo;
+        res[length(tab)][1] = score;
+        return res;
+    }
+
+    /**
+     * Enregistre le score du joueur dans un fichier csv
+     */
+    void enregistrerScore() {
+        CSVFile f = loadCSV("ressources/scores.csv");
+        int rowCount = rowCount(f);
+        boolean joueurTrouve = false;
+        String[][] res = new String[rowCount][2];
+        for (int i = 0; i < rowCount; i++) {
+            res[i][0] = getCell(f, i, 0);
+            res[i][1] = getCell(f, i, 1);
+            if (equals(res[i][0],pseudo)) {
+                int scoreExistant = string2Int(res[i][1]);
+                score = score + scoreExistant;
+                res[i][1] = int2String(score);
+                joueurTrouve = true;
+            }
+        }
+        if (!joueurTrouve) {
+            res = add(res, pseudo, int2String(score));
+        }
+        saveCSV(res, "ressources/scores.csv");
+    }
+
+    /**
      * Boucle principale du jeu
      */
     void boucle() {
@@ -527,14 +671,14 @@ class MemoriseMoi extends Program {
         int choix = 0;
         do {
             init();
-            choix = readStringNb(); // READ
+            choix = readStringNb(); 
             if (choix == 1) {
                 clearScreen();
                 accueil();
                 println("1. Français" + '\n' +
                         "2. Maths" + '\n' +
                         "3. Retour");
-                choix = readStringNb(); // READ
+                choix = readStringNb();
                 if (choix == 1) {
                     jouer("français");
                 } else if (choix == 2) {
@@ -553,10 +697,23 @@ class MemoriseMoi extends Program {
     }
 
     /**
+     * Demande au joueur si il veut enregistrer son score et affiche un texte d'au revoir
+     */
+    void finDeJeu() {
+        clearScreen();
+        println("Voulez-vous enregistrer votre score ? (o/n)");
+        String choix = readString();
+        if (equals(choix,"o")) {
+            enregistrerScore();
+        }
+        auRevoir();
+    }
+
+    /**
      * Algorithme principal
      */
     void algorithm() {
         boucle();
-        auRevoir();
+        finDeJeu();
     }
 }
