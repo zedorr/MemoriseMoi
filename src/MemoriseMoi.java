@@ -30,15 +30,6 @@ class MemoriseMoi extends Program {
         }
         return substring(res, 0, length(res)-5);
     }
-
-    void testFileToString() {
-        assertEquals("Bonjour\n" +
-                "Comment\n" +
-                "ça va\n" +
-                "Bien et toi\n" +
-                "Très bien merci\n" +
-                "Au revoir\n", fileToString("ressources/test.txt"));
-    }
     
     /**
      * Affiche le menu d'accueil
@@ -90,27 +81,12 @@ class MemoriseMoi extends Program {
         return carte;
     }
 
-    void testNewCarte() {
-        Carte carte = newCarte("Bonjour", 1);
-        assertEquals("Bonjour", carte.valeur);
-        assertFalse(carte.estRetournee);
-        assertFalse(carte.estAppariee);
-    }
-
     /**
      * @param carte
      * retourne la carte
      */
     void retourner(Carte carte) {
         carte.estRetournee = !carte.estRetournee;
-    }
-
-    void testRetourner() {
-        Carte carte = newCarte("Bonjour", 1);
-        retourner(carte);
-        assertTrue(carte.estRetournee);
-        retourner(carte);
-        assertFalse(carte.estRetournee);
     }
 
     /**
@@ -178,13 +154,6 @@ class MemoriseMoi extends Program {
         return jeuDeCartes;
     }
 
-    void testNewJeuDeCartes() {
-        JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        assertEquals(0, jeuDeCartes.nbCartes);
-        assertEquals(0, jeuDeCartes.nbCartesRestantes);
-        assertEquals(0, length(jeuDeCartes.paquet));
-    }
-
     /**
      * @param paquet
      * @param question 
@@ -208,16 +177,6 @@ class MemoriseMoi extends Program {
         return res;
     }
 
-    void testAdd() {
-        Carte[][] paquet = new Carte[0][0];
-        paquet = add(paquet, newCarte("Bonjour", 1), newCarte("Hello", 1), newCarte("Comment", 2), newCarte("How", 2));
-        assertEquals(1, length(paquet));
-        assertEquals("Bonjour", paquet[0][0].valeur);
-        assertEquals("Hello", paquet[0][1].valeur);
-        assertEquals("Comment", paquet[0][2].valeur);
-        assertEquals("How", paquet[0][3].valeur);
-    }
-
     /**
      * @param jeuDeCartes
      * @param question
@@ -231,17 +190,6 @@ class MemoriseMoi extends Program {
         jeuDeCartes.nbCartesRestantes+=4;
         jeuDeCartes.paquet = add(jeuDeCartes.paquet, question, reponse, question2, reponse2);
         return jeuDeCartes;
-    }
-    
-    void testAjouterCarte() {
-        JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1), newCarte("Comment", 2), newCarte("How", 2));
-        assertEquals(4, jeuDeCartes.nbCartes);
-        assertEquals(4, jeuDeCartes.nbCartesRestantes);
-        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
-        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
-        assertEquals("Comment", jeuDeCartes.paquet[0][2].valeur);
-        assertEquals("How", jeuDeCartes.paquet[0][3].valeur);
     }
 
     /**
@@ -264,14 +212,6 @@ class MemoriseMoi extends Program {
         return res;
     }
 
-    void testLoadCartes() {
-        Carte[][] paquet = loadCartes("questions/test.csv");
-        assertEquals("Bonjour", paquet[0][0].valeur);
-        assertEquals("Hello", paquet[0][1].valeur);
-        assertEquals(paquet[0][2].numId, paquet[0][3].numId);
-        assertEquals("Comment", paquet[0][2].valeur);
-    }
-
     /**
      * @param max
      * @return int
@@ -279,11 +219,6 @@ class MemoriseMoi extends Program {
      */
     int randomInt(int max) {
         return (int)(random() * max);
-    }
-
-    void testRandomInt() {
-        int random = randomInt(10);
-        assertTrue(random >= 0 && random < 10);
     }
 
     /**
@@ -312,18 +247,6 @@ class MemoriseMoi extends Program {
         for (int i = 0; i < length(paquet, 1); i++) {
             j = ajouterCarte(j, paquet[i][0], paquet[i][1], paquet[i][2], paquet[i][3]);
         }
-    }
-
-    void testGenererPaquet() {
-        JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        Carte[][] paquet = loadCartes("questions/test.csv");
-        genererPaquet(jeuDeCartes, paquet);
-        assertEquals(8, jeuDeCartes.nbCartes);
-        assertEquals(8, jeuDeCartes.nbCartesRestantes);
-        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
-        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
-        assertEquals("Comment", jeuDeCartes.paquet[0][2].valeur);
-        assertEquals("How", jeuDeCartes.paquet[0][3].valeur);
     }
 
     /**
@@ -403,17 +326,6 @@ class MemoriseMoi extends Program {
             }
         }
         return true;
-    }
-
-    void testJeuFini() {
-        Carte[][] paquet = loadCartes("questions/test.csv");
-        assertFalse(jeuFini(paquet));
-        for (int i=0; i<length(paquet, 1); i++) {
-            for (int j=0; j<length(paquet, 2); j++) {
-                retourner(paquet[i][j]);
-            }
-        }
-        assertTrue(jeuFini(paquet));
     }
 
     /**
@@ -594,13 +506,6 @@ class MemoriseMoi extends Program {
         return res;
     }
 
-    void testString2Int() {
-        assertEquals(123, string2Int("123"));
-        assertEquals(0, string2Int("0"));
-        assertEquals(1, string2Int("1"));
-        assertEquals(10, string2Int("10"));
-    }
-
     /**
      * @param i
      * @return String
@@ -608,13 +513,6 @@ class MemoriseMoi extends Program {
      */
     String int2String(int i) {
         return "" + i;
-    }
-
-    void testInt2String() {
-        assertEquals("123", int2String(123));
-        assertEquals("0", int2String(0));
-        assertEquals("1", int2String(1));
-        assertEquals("10", int2String(10));
     }
 
     /**
@@ -715,5 +613,108 @@ class MemoriseMoi extends Program {
     void algorithm() {
         boucle();
         finDeJeu();
+    }
+
+    // TESTS
+    void testInt2String() {
+        assertEquals("123", int2String(123));
+        assertEquals("0", int2String(0));
+        assertEquals("1", int2String(1));
+        assertEquals("10", int2String(10));
+    }
+
+    void testString2Int() {
+        assertEquals(123, string2Int("123"));
+        assertEquals(0, string2Int("0"));
+        assertEquals(1, string2Int("1"));
+        assertEquals(10, string2Int("10"));
+    }
+
+    void testJeuFini() {
+        Carte[][] paquet = loadCartes("questions/test.csv");
+        assertFalse(jeuFini(paquet));
+        for (int i=0; i<length(paquet, 1); i++) {
+            for (int j=0; j<length(paquet, 2); j++) {
+                retourner(paquet[i][j]);
+            }
+        }
+        assertTrue(jeuFini(paquet));
+    }
+
+    void testFileToString() {
+        assertEquals("Bonjour\n" +
+                "Comment\n" +
+                "ça va\n" +
+                "Bien et toi\n" +
+                "Très bien merci\n" +
+                "Au revoir\n", fileToString("ressources/test.txt"));
+    }
+
+    void testNewCarte() {
+        Carte carte = newCarte("Bonjour", 1);
+        assertEquals("Bonjour", carte.valeur);
+        assertFalse(carte.estRetournee);
+        assertFalse(carte.estAppariee);
+    }
+
+    void testRetourner() {
+        Carte carte = newCarte("Bonjour", 1);
+        retourner(carte);
+        assertTrue(carte.estRetournee);
+        retourner(carte);
+        assertFalse(carte.estRetournee);
+    }
+
+    void testNewJeuDeCartes() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        assertEquals(0, jeuDeCartes.nbCartes);
+        assertEquals(0, jeuDeCartes.nbCartesRestantes);
+        assertEquals(0, length(jeuDeCartes.paquet));
+    }
+
+    void testAdd() {
+        Carte[][] paquet = new Carte[0][0];
+        paquet = add(paquet, newCarte("Bonjour", 1), newCarte("Hello", 1), newCarte("Comment", 2), newCarte("How", 2));
+        assertEquals(1, length(paquet));
+        assertEquals("Bonjour", paquet[0][0].valeur);
+        assertEquals("Hello", paquet[0][1].valeur);
+        assertEquals("Comment", paquet[0][2].valeur);
+        assertEquals("How", paquet[0][3].valeur);
+    }
+
+    void testGenererPaquet() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        Carte[][] paquet = loadCartes("questions/test.csv");
+        genererPaquet(jeuDeCartes, paquet);
+        assertEquals(8, jeuDeCartes.nbCartes);
+        assertEquals(8, jeuDeCartes.nbCartesRestantes);
+        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
+        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
+        assertEquals("Comment", jeuDeCartes.paquet[0][2].valeur);
+        assertEquals("How", jeuDeCartes.paquet[0][3].valeur);
+    }
+
+    void testLoadCartes() {
+        Carte[][] paquet = loadCartes("questions/test.csv");
+        assertEquals("Bonjour", paquet[0][0].valeur);
+        assertEquals("Hello", paquet[0][1].valeur);
+        assertEquals(paquet[0][2].numId, paquet[0][3].numId);
+        assertEquals("Comment", paquet[0][2].valeur);
+    }
+
+    void testAjouterCarte() {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        jeuDeCartes = ajouterCarte(jeuDeCartes, newCarte("Bonjour", 1), newCarte("Hello", 1), newCarte("Comment", 2), newCarte("How", 2));
+        assertEquals(4, jeuDeCartes.nbCartes);
+        assertEquals(4, jeuDeCartes.nbCartesRestantes);
+        assertEquals("Bonjour", jeuDeCartes.paquet[0][0].valeur);
+        assertEquals("Hello", jeuDeCartes.paquet[0][1].valeur);
+        assertEquals("Comment", jeuDeCartes.paquet[0][2].valeur);
+        assertEquals("How", jeuDeCartes.paquet[0][3].valeur);
+    }
+
+    void testRandomInt() {
+        int random = randomInt(10);
+        assertTrue(random >= 0 && random < 10);
     }
 }
