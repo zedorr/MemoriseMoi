@@ -403,6 +403,10 @@ class MemoriseMoi extends Program {
                 delay(2000);
                 score=score+1;
             }
+            if (pointsBot == pointsJoueur) {
+                println("Egalité !");
+                delay(2000);
+            }
         }
     }
 
