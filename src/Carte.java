@@ -3,4 +3,5 @@ class Carte {
     boolean estRetournee;
     boolean estAppariee;
     int numId;
+    String proprietaire;
 }

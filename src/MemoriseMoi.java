@@ -110,6 +110,23 @@ class MemoriseMoi extends Program {
     }
     
     /**
+     * @param carte
+     * retourne le proprietaire de la carte
+     */
+    String getProprietaire(Carte carte) {
+        return carte.proprietaire;
+    }
+
+    /**
+     * @param carte
+     * @param proprietaire
+     * Change le proprietaire de la carte
+     */
+    void setProprietaire(Carte carte, String proprietaire) {
+        carte.proprietaire = proprietaire;
+    }
+
+    /**
      * @param paquet
      * Affiche le paquet de cartes (4 cartes par colonnes)
      */
@@ -131,7 +148,13 @@ class MemoriseMoi extends Program {
                     for (int l=0; l < 19 - length(valeur) - espaces ; l++) {
                         espacesDroite = espacesDroite + " ";
                     }
-                    affichage = affichage + "| " + espacesGauche + valeur + espacesDroite + " |";
+                    if (paquet[i][j].proprietaire == "joueur") {
+                        affichage = affichage + "| " + ANSI_GREEN + espacesGauche + valeur + espacesDroite + ANSI_RESET + " |";
+                    } else if (paquet[i][j].proprietaire == "bot") {
+                        affichage = affichage + "| " + ANSI_RED + espacesGauche + valeur + espacesDroite + ANSI_RESET + " |";
+                    } else {
+                        affichage = affichage + "| " + espacesGauche + valeur + espacesDroite + " |";
+                    }
                 } else {
                     affichage = affichage + "|          ?          |";
                 }
@@ -351,6 +374,8 @@ class MemoriseMoi extends Program {
         if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
             appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
             appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+            jeuDeCartes.paquet[choixLigne1][choixColonne1].proprietaire = "joueur";
+            jeuDeCartes.paquet[choixLigne2][choixColonne2].proprietaire = "joueur";
             jeuDeCartes.nbCartesRestantes -= 2;
             pointsJoueur=pointsJoueur+1;
         } else {
@@ -384,6 +409,8 @@ class MemoriseMoi extends Program {
             if (jeuDeCartes.paquet[lig1][col1].numId == jeuDeCartes.paquet[lig2][col2].numId) {
                 appairer(jeuDeCartes.paquet[lig1][col1]);
                 appairer(jeuDeCartes.paquet[lig2][col2]);
+                jeuDeCartes.paquet[lig1][col1].proprietaire = "bot";
+                jeuDeCartes.paquet[lig2][col2].proprietaire = "bot";
                 jeuDeCartes.nbCartesRestantes -= 2;
                 pointsBot=pointsBot+1;
             } else {
