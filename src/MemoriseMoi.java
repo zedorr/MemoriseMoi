@@ -11,7 +11,8 @@ class MemoriseMoi extends Program {
         accueil();
         println("1. Jouer" + '\n' +
                 "2. Règles" + '\n' +
-                "3. Quitter");
+                "3. Scores" + '\n' +
+                "4. Quitter");
     }
 
     /**
@@ -563,6 +564,35 @@ class MemoriseMoi extends Program {
     }
 
     /**
+     * Affiche le score des joueurs
+     */
+    void afficherScore() {
+        clearScreen();
+        CSVFile f = loadCSV("ressources/scores.csv");
+        int rowCount = rowCount(f);
+        String[][] res = new String[rowCount][2];
+        for (int i = 0; i < rowCount; i++) {
+            res[i][0] = getCell(f, i, 0);
+            res[i][1] = getCell(f, i, 1);
+        }
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < 2; j++) {
+                print(res[i][j] + "   ");
+            }
+            println();
+        }
+        println();
+        println("1. Retour");
+        int choix = readStringNb();
+        while (choix != 1) { 
+            println("1. Retour");
+            choix = readStringNb();
+        }
+        clearScreen();
+        init();
+    }
+
+    /**
      * Boucle principale du jeu
      */
     void boucle() {
@@ -593,9 +623,11 @@ class MemoriseMoi extends Program {
             } else if (choix == 2) {
                 afficherRegles();
             } else if (choix == 3) {
+                afficherScore();
+            } else if (choix == 4) {
                 println("");
             }
-        } while (choix != 3);
+        } while (choix != 4);
     }
 
     /**
