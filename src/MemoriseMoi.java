@@ -3,6 +3,8 @@ import extensions.CSVFile;
 class MemoriseMoi extends Program {
     String pseudo;
     int score = 0;
+    int pointsJoueur = 0;
+    int pointsBot = 0;
     
     /**
      * Affiche le menu principal
@@ -334,8 +336,6 @@ class MemoriseMoi extends Program {
      * tour de jeu avec l'ordinateur
      */
     void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
-        int pointsBot = 0;
-        int pointsJoueur = 0;
 
         println("A vous de jouer " + pseudo + " :");
         int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
@@ -399,7 +399,7 @@ class MemoriseMoi extends Program {
                 println("L'ordinateur a gagné :/");
                 delay(2000);
             }
-            if (pointsBot < pointsJoueur) {
+            if (pointsJoueur > pointsBot) {
                 println("Bravo " + pseudo + " ! Vous avez gagné !");
                 delay(2000);
                 score=score+1;
@@ -408,6 +408,8 @@ class MemoriseMoi extends Program {
                 println("Egalité !");
                 delay(2000);
             }
+            pointsBot = 0;
+            pointsJoueur = 0;
         }
     }
 
