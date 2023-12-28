@@ -2,6 +2,7 @@ import extensions.CSVFile;
 
 class MemoriseMoi extends Program {
     String pseudo;
+    int longMaxPseudo = 18;
     int score = 0;
     int pointsJoueur = 0;
     int pointsBot = 0;
@@ -604,13 +605,27 @@ class MemoriseMoi extends Program {
             res[i][0] = getCell(f, i, 0);
             res[i][1] = getCell(f, i, 1);
         }
+        print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
+              "■       Pseudo       ■       Score       ■" + '\n' +
+              "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n');
         for (int i = 0; i < rowCount; i++) {
+            print("■ ");
             for (int j = 0; j < 2; j++) {
-                print(res[i][j] + "   ");
+                String val = res[i][j];
+                String espacesGauche = "";
+                String espacesDroite = "";
+                int espaces = (18 - length(val)) / 2;
+                for (int k=0 ; k < espaces ; k++) {
+                    espacesGauche = espacesGauche + " ";
+                }
+                for (int l=0; l < 18 - length(val) - espaces ; l++) {
+                    espacesDroite = espacesDroite + " ";
+                }
+                print(espacesGauche + val + espacesDroite + " ■");
             }
             println();
         }
-        println();
+        println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■"+'\n');
         println("1. Retour");
         int choix = readStringNb();
         while (choix != 1) { 
@@ -628,7 +643,12 @@ class MemoriseMoi extends Program {
         clearScreen();
         accueil();
         println("Veuillez saisir votre pseudo : ");
-        pseudo = readString();
+        do {
+            pseudo = readString();
+            if (length(pseudo) > longMaxPseudo) {
+                println("Veuillez saisir un pseudo de moins de " + longMaxPseudo + " caractères");
+            }
+        } while (length(pseudo) > longMaxPseudo);
         int choix = 0;
         do {
             init();
