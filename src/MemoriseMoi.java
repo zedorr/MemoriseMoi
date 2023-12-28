@@ -135,18 +135,19 @@ class MemoriseMoi extends Program {
         clearScreen();
         String affichage = "";
         for (int i = 0; i < length(paquet); i++) {
-            affichage = affichage + " _____________________ " + " _____________________ " + " _____________________ " + " _____________________ " + '\n';
-            affichage = affichage + "|                     |" + "|                     |" + "|                     |" + "|                     |" + '\n';
+            affichage = affichage + " ___________________________ " + " ___________________________ " + " ___________________________ " + " ___________________________ " + '\n' +
+                                    "|                           |" + "|                           |" + "|                           |" + "|                           |" + '\n' +
+                                    "|                           |" + "|                           |" + "|                           |" + "|                           |" + '\n';
             for (int j = 0; j < 4; j++) {
                 if (paquet[i][j].estRetournee) {
                     String valeur = paquet[i][j].valeur;
                     String espacesGauche = "";
                     String espacesDroite = "";
-                    int espaces = (19 - length(valeur)) / 2; 
+                    int espaces = (25 - length(valeur)) / 2; 
                     for (int k=0 ; k < espaces ; k++) {
                         espacesGauche = espacesGauche + " ";
                     }
-                    for (int l=0; l < 19 - length(valeur) - espaces ; l++) {
+                    for (int l=0; l < 25 - length(valeur) - espaces ; l++) {
                         espacesDroite = espacesDroite + " ";
                     }
                     if (paquet[i][j].proprietaire == "joueur") {
@@ -157,16 +158,17 @@ class MemoriseMoi extends Program {
                         affichage = affichage + "| " + espacesGauche + valeur + espacesDroite + " |";
                     }
                 } else {
-                    affichage = affichage + "|          ?          |";
+                    affichage = affichage + "|             ?             |";
                 }
             }
             int indice = i+1; 
-            affichage = affichage + "  " + indice + '\n';
-            affichage = affichage + "|                     |" + "|                     |" + "|                     |" + "|                     |" + '\n';
-            affichage = affichage + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + '\n';
+            affichage = affichage + "  " + indice + '\n' +
+                                  "|                           |" + "|                           |" + "|                           |" + "|                           |" + '\n' +
+                                  "|                           |" + "|                           |" + "|                           |" + "|                           |" + '\n' +
+                                  " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ " + '\n';
             
         }
-        affichage = affichage + "          a            " + "           b           " + "          c            " + "           d           " + '\n';
+        affichage = affichage + "             a               " + "              b              " + "             c               " + "              d              " + '\n';
         println(affichage);
     }
     
@@ -658,13 +660,16 @@ class MemoriseMoi extends Program {
                 accueil();
                 println("1. Français" + '\n' +
                         "2. Maths" + '\n' +
-                        "3. Retour");
+                        "3. Histoire" + '\n' +
+                        "4. Retour");
                 choix = readStringNb();
                 if (choix == 1) {
                     jouer("français");
                 } else if (choix == 2) {
                     jouer("maths");
                 } else if (choix == 3) {
+                    jouer("histoire");
+                } else if (choix == 4) {
                     clearScreen();
                     init();
                     choix = 1;
