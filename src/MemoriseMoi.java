@@ -596,6 +596,32 @@ class MemoriseMoi extends Program {
     }
 
     /**
+     * @param tab
+     * @return tab
+     * Retourne un tableau trié par ordre décroissant
+     */
+    String[][] triCsv(String[][] tab) {
+        String[][] res = new String[length(tab)][2];
+        for (int i = 0; i < length(tab); i++) {
+            res[i][0] = tab[i][0];
+            res[i][1] = tab[i][1];
+        }
+        for (int i = 0; i < length(res); i++) {
+            for (int j = 0; j < length(res); j++) {
+                if (string2Int(res[i][1]) > string2Int(res[j][1])) {
+                    String temp = res[i][0];
+                    res[i][0] = res[j][0];
+                    res[j][0] = temp;
+                    temp = res[i][1];
+                    res[i][1] = res[j][1];
+                    res[j][1] = temp;
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
      * Affiche le score des joueurs
      */
     void afficherScore() {
@@ -607,6 +633,7 @@ class MemoriseMoi extends Program {
             res[i][0] = getCell(f, i, 0);
             res[i][1] = getCell(f, i, 1);
         }
+        res = triCsv(res);
         print("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n' +
               "■       Pseudo       ■       Score       ■" + '\n' +
               "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" + '\n');
@@ -807,5 +834,20 @@ class MemoriseMoi extends Program {
     void testRandomInt() {
         int random = randomInt(10);
         assertTrue(random >= 0 && random < 10);
+    }
+
+    void testTriCsv() {
+        String[][] tab = new String[][]{{"a", "1"}, {"b", "2"}, {"c", "3"}, {"d", "4"}, {"e", "5"}};
+        String[][] res = triCsv(tab);
+        assertEquals("e", res[0][0]);
+        assertEquals("5", res[0][1]);
+        assertEquals("d", res[1][0]);
+        assertEquals("4", res[1][1]);
+        assertEquals("c", res[2][0]);
+        assertEquals("3", res[2][1]);
+        assertEquals("b", res[3][0]);
+        assertEquals("2", res[3][1]);
+        assertEquals("a", res[4][0]);
+        assertEquals("1", res[4][1]);
     }
 }
