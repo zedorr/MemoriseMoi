@@ -190,7 +190,7 @@ class MemoriseMoi extends Program {
      * @param question2
      * @param reponse2
      * @return Carte[][]
-     * Ajoute 2 couple de cartes au paquet
+     * Ajoute 2 couples de cartes au paquet
      */
     Carte[][] add(Carte[][] paquet, Carte question, Carte reponse, Carte question2, Carte reponse2) {
         Carte[][] res = new Carte[length(paquet,1)+1][4];
@@ -212,7 +212,7 @@ class MemoriseMoi extends Program {
      * @param reponse
      * @param question2
      * @param reponse2
-     * Ajoute 2 couple de cartes au jeu de cartes
+     * Ajoute 2 couples de cartes au jeu de cartes
      */
     JeuDeCartes ajouterCarte(JeuDeCartes jeuDeCartes, Carte question, Carte reponse, Carte question2, Carte reponse2) {
         jeuDeCartes.nbCartes+=4;
@@ -223,7 +223,7 @@ class MemoriseMoi extends Program {
 
     /**
      * @param nomFichier
-     * @return tableau à 2 dimensions de cartes
+     * @return tableau à 2 dimensions de cartes, a partir d'un fichier csv
      */
     Carte[][] loadCartes(String nomFichier) {
         CSVFile f = loadCSV(nomFichier);
@@ -483,7 +483,7 @@ class MemoriseMoi extends Program {
     int[] saisieAleatoireBot(Carte[][] paquet) {
         int[] res = new int[]{-1,-1};
         int randomLigne = randomInt(length(paquet,1));
-        int randomColonne = randomInt(2);
+        int randomColonne = randomInt(4);
         while (paquet[randomLigne][randomColonne].estRetournee) {
             randomLigne = randomInt(length(paquet,1));
             randomColonne = randomInt(4);
@@ -553,11 +553,11 @@ class MemoriseMoi extends Program {
     }
 
     /**
-     * @param paquet
-     * @param question 
-     * @param reponse
-     * @return Carte[][]
-     * Ajoute 2 couple de cartes au paquet
+     * @param tab
+     * @param pseudo 
+     * @param score
+     * @return String[][]
+     * Ajoute un score au tableau de score si le joueur n'est pas encore dedans
      */
     String[][] add(String[][] tab, String pseudo, String score) {
         String[][] res = new String[length(tab,1)+1][2];
