@@ -15,7 +15,8 @@ class MemoriseMoi extends Program {
         println("1. Jouer" + '\n' +
                 "2. Règles" + '\n' +
                 "3. Scores" + '\n' +
-                "4. Quitter");
+                "4. Ajouter des questions" + '\n' +
+                "5. Quitter");
     }
 
     /**
@@ -279,41 +280,6 @@ class MemoriseMoi extends Program {
     }
 
     /**
-     * @param matiere
-     * Joue au jeu
-     */
-    void jouer(String matiere) {
-        JeuDeCartes jeuDeCartes = newJeuDeCartes();
-        Carte[][] p = loadCartes("questions/"+matiere+".csv");
-
-        genererPaquet(jeuDeCartes, p);
-        melanger(jeuDeCartes.paquet);
-        afficherPaquet(jeuDeCartes.paquet);
-
-        println("1. Seul" + '\n' +
-                "2. Contre l'ordinateur" + '\n' +
-                "3. Retour");
-
-        int choix = readStringNb();
-        if (choix == 1) {
-            while(jeuDeCartes.nbCartesRestantes > 0) {
-                tourDeJeuSeul(jeuDeCartes);
-            }
-        } else if (choix == 2) {
-            while(jeuDeCartes.nbCartesRestantes > 0) {
-                tourDeJeuBot(jeuDeCartes);
-            }
-        } else if (choix == 3) {
-            clearScreen();
-            init();
-            choix = 1;
-        } else {
-            println("Veuillez saisir un nombre entre 1 et 3");
-            choix = readStringNb();
-        }
-    }
-
-    /**
      * @return int
      * Controle que l'entrée est bien un entier
      */
@@ -355,6 +321,41 @@ class MemoriseMoi extends Program {
             }
         }
         return true;
+    }
+
+    /**
+     * @param matiere
+     * Joue au jeu
+     */
+    void jouer(String matiere) {
+        JeuDeCartes jeuDeCartes = newJeuDeCartes();
+        Carte[][] p = loadCartes("questions/"+matiere+".csv");
+
+        genererPaquet(jeuDeCartes, p);
+        melanger(jeuDeCartes.paquet);
+        afficherPaquet(jeuDeCartes.paquet);
+
+        println("1. Seul" + '\n' +
+                "2. Contre l'ordinateur" + '\n' +
+                "3. Retour");
+
+        int choix = readStringNb();
+        if (choix == 1) {
+            while(jeuDeCartes.nbCartesRestantes > 0) {
+                tourDeJeuSeul(jeuDeCartes);
+            }
+        } else if (choix == 2) {
+            while(jeuDeCartes.nbCartesRestantes > 0) {
+                tourDeJeuBot(jeuDeCartes);
+            }
+        } else if (choix == 3) {
+            clearScreen();
+            init();
+            choix = 1;
+        } else {
+            println("Veuillez saisir un nombre entre 1 et 3");
+            choix = readStringNb();
+        }
     }
 
     /**
@@ -665,6 +666,52 @@ class MemoriseMoi extends Program {
         init();
     }
 
+
+
+    /**
+     * Ajouter deux questions et deux réponses au fichier csv
+     */
+    void ajouterQuestions() {
+        println("Dans quelle matière voulez-vous ajouter des questions ?" + '\n' +
+                "1. Mathématiques" + '\n' +
+                "2. Histoire" + '\n' +
+                "3. Français");
+        int choix = readStringNb();
+        String matiere = "";
+        if (choix == 1) {
+            matiere = "maths";
+        } else if (choix == 2) {
+            matiere = "histoire";
+        } else if (choix == 3) {
+            matiere = "français";
+        } else {
+            println("Veuillez saisir un nombre entre 1 et 3");
+            choix = readStringNb();
+        }
+        println("Veuillez saisir la première question : ");
+        String question1 = readString();
+        println("Veuillez saisir la réponse à la première question : ");
+        String reponse1 = readString();
+        println("Veuillez saisir la deuxième question : ");
+        String question2 = readString();
+        println("Veuillez saisir la réponse à la deuxième question : ");
+        String reponse2 = readString();
+        CSVFile f = loadCSV("questions/"+matiere+".csv");
+        int rowCount = rowCount(f);
+        String[][] res = new String[rowCount+1][4];
+        for (int i = 0; i < rowCount; i++) {
+            res[i][0] = getCell(f, i, 0);
+            res[i][1] = getCell(f, i, 1);
+            res[i][2] = getCell(f, i, 2);
+            res[i][3] = getCell(f, i, 3);
+        }
+        res[rowCount][0] = question1;
+        res[rowCount][1] = reponse1;
+        res[rowCount][2] = question2;
+        res[rowCount][3] = reponse2;
+        saveCSV(res, "questions/"+matiere+".csv");
+    }
+
     /**
      * Boucle principale du jeu
      */
@@ -706,9 +753,11 @@ class MemoriseMoi extends Program {
             } else if (choix == 3) {
                 afficherScore();
             } else if (choix == 4) {
+                ajouterQuestions();
+            } else if (choix == 5) {
                 println("");
             }
-        } while (choix != 4);
+        } while (choix != 5);
     }
 
     /**
