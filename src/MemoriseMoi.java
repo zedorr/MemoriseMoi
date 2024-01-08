@@ -669,25 +669,29 @@ class MemoriseMoi extends Program {
 
 
     /**
-     * Ajouter deux questions et deux réponses au fichier csv
+     * Ajouter deux questions et deux réponses au fichier csv choisit
      */
     void ajouterQuestions() {
+        clearScreen();
+        accueil();
         println("Dans quelle matière voulez-vous ajouter des questions ?" + '\n' +
                 "1. Mathématiques" + '\n' +
                 "2. Histoire" + '\n' +
                 "3. Français");
         int choix = readStringNb();
         String matiere = "";
-        if (choix == 1) {
-            matiere = "maths";
-        } else if (choix == 2) {
-            matiere = "histoire";
-        } else if (choix == 3) {
-            matiere = "français";
-        } else {
-            println("Veuillez saisir un nombre entre 1 et 3");
-            choix = readStringNb();
-        }
+        do {
+            if (choix == 1) {
+                matiere = "maths";
+            } else if (choix == 2) {
+                matiere = "histoire";
+            } else if (choix == 3) {
+                matiere = "français";
+            } else {
+                println("Veuillez saisir un nombre entre 1 et 3");
+                choix = readStringNb();
+            }
+        } while (choix != 1 && choix != 2 && choix != 3);
         println("Veuillez saisir la première question : ");
         String question1 = readString();
         println("Veuillez saisir la réponse à la première question : ");
@@ -710,6 +714,15 @@ class MemoriseMoi extends Program {
         res[rowCount][2] = question2;
         res[rowCount][3] = reponse2;
         saveCSV(res, "questions/"+matiere+".csv");
+        println("Vos questions ont bien été ajoutées !");
+        println("Voulez-vous ajouter d'autres questions ? (o/n)");
+        String reponse = readString();
+        if (equals(reponse,"o")) {
+            ajouterQuestions();
+        } else {
+            clearScreen();
+            init();
+        }
     }
 
     /**
