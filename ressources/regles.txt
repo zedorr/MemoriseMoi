@@ -1,7 +1,7 @@
 Memory en mode solo ou contre l'ordinateur - Règles du jeu
 
 Matériel:
-Un ensemble de cartes (paires d'images ou de nombres) représentées par des symboles dans le terminal.
+Un ensemble de cartes (paires d'images ou de nombres) représentées par des traits dans le terminal.
 
 Objectif:
 Trouver toutes les paires de cartes.

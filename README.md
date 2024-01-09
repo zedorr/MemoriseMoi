@@ -1,5 +1,3 @@
-# Ajouter fonc ajout question
-
 # Memorise Moi !
 ===========
 

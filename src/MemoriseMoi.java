@@ -677,7 +677,8 @@ class MemoriseMoi extends Program {
         println("Dans quelle matière voulez-vous ajouter des questions ?" + '\n' +
                 "1. Mathématiques" + '\n' +
                 "2. Histoire" + '\n' +
-                "3. Français");
+                "3. Français" + '\n' +
+                "4. Retour");
         int choix = readStringNb();
         String matiere = "";
         do {
@@ -687,42 +688,47 @@ class MemoriseMoi extends Program {
                 matiere = "histoire";
             } else if (choix == 3) {
                 matiere = "français";
+            } else if (choix == 4) {
+                clearScreen();
+                init();
             } else {
-                println("Veuillez saisir un nombre entre 1 et 3");
+                println("Veuillez saisir un nombre entre 1 et 4");
                 choix = readStringNb();
             }
-        } while (choix != 1 && choix != 2 && choix != 3);
-        println("Veuillez saisir la première question : ");
-        String question1 = readString();
-        println("Veuillez saisir la réponse à la première question : ");
-        String reponse1 = readString();
-        println("Veuillez saisir la deuxième question : ");
-        String question2 = readString();
-        println("Veuillez saisir la réponse à la deuxième question : ");
-        String reponse2 = readString();
-        CSVFile f = loadCSV("questions/"+matiere+".csv");
-        int rowCount = rowCount(f);
-        String[][] res = new String[rowCount+1][4];
-        for (int i = 0; i < rowCount; i++) {
-            res[i][0] = getCell(f, i, 0);
-            res[i][1] = getCell(f, i, 1);
-            res[i][2] = getCell(f, i, 2);
-            res[i][3] = getCell(f, i, 3);
-        }
-        res[rowCount][0] = question1;
-        res[rowCount][1] = reponse1;
-        res[rowCount][2] = question2;
-        res[rowCount][3] = reponse2;
-        saveCSV(res, "questions/"+matiere+".csv");
-        println("Vos questions ont bien été ajoutées !");
-        println("Voulez-vous ajouter d'autres questions ? (o/n)");
-        String reponse = readString();
-        if (equals(reponse,"o")) {
-            ajouterQuestions();
-        } else {
-            clearScreen();
-            init();
-        }
+        } while (choix != 1 && choix != 2 && choix != 3 && choix != 4);
+        if (choix != 4) {
+            println("Veuillez saisir la première question : ");
+            String question1 = readString();
+            println("Veuillez saisir la réponse à la première question : ");
+            String reponse1 = readString();
+            println("Veuillez saisir la deuxième question : ");
+            String question2 = readString();
+            println("Veuillez saisir la réponse à la deuxième question : ");
+            String reponse2 = readString();
+            CSVFile f = loadCSV("questions/"+matiere+".csv");
+            int rowCount = rowCount(f);
+            String[][] res = new String[rowCount+1][4];
+            for (int i = 0; i < rowCount; i++) {
+                res[i][0] = getCell(f, i, 0);
+                res[i][1] = getCell(f, i, 1);
+                res[i][2] = getCell(f, i, 2);
+                res[i][3] = getCell(f, i, 3);
+            }
+            res[rowCount][0] = question1;
+            res[rowCount][1] = reponse1;
+            res[rowCount][2] = question2;
+            res[rowCount][3] = reponse2;
+            saveCSV(res, "questions/"+matiere+".csv");
+            println("Vos questions ont bien été ajoutées !");
+            println("Voulez-vous ajouter d'autres questions ? (o/n)");
+            String reponse = readString();
+            if (equals(reponse,"o")) {
+                ajouterQuestions();
+            } else {
+                clearScreen();
+                init();
+            }
+        }   
     }
 
     /**
