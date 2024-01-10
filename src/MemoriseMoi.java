@@ -9,7 +9,7 @@ class MemoriseMoi extends Program {
     
     /**
      * @param nomFichier
-     * Convertit un fichier en String
+     * Convertit un fichier en chaine de caractères
      */
     String fileToString(String nomFichier) {
         extensions.File f = newFile(nomFichier);
@@ -343,39 +343,34 @@ class MemoriseMoi extends Program {
 
     /**
      * @param paquet
-     * @return int
-     * Retourne une saisie de ligne valide
+     * @return int[]
+     * Retourne un tableau avec 2 valeurs, l'indice de la ligne à l'indice 0 et l'indice de la colonne à l'indice 1
      */
-    int saisieValideLigne(Carte[][] paquet) {
+    int[] saisieValide(Carte[][] paquet) {
         println("Ligne de la carte à retourner : ");
-        int lignes = length(paquet, 1);
-        int res = readStringNb();
-        if (res < 1 || res >= lignes+1) {
-            println("Veuillez saisir un nombre entre 1 et " + lignes);
-            res = readStringNb();
+        int nbLignes = length(paquet, 1);
+        int ligne = readStringNb();
+        if (ligne < 1 || ligne >= nbLignes+1) {
+            println("Veuillez saisir un nombre entre 1 et " + nbLignes);
+            ligne = readStringNb();
         }
-        return res-1;
-    }
+        ligne = ligne-1;
 
-    /**
-     * @param paquet
-     * @return int
-     * Retourne une saisie de colonne valide
-     */
-    int saisieValideColonne(Carte[][] paquet, int ligneChoisie) {
-        int colonnes = length(paquet, 2);
-        String res;
+        int nbColonnes = length(paquet, 2);
+        String colonne;
         println("Colonne de la carte à retourner : ");
         do {
-            res = readString().toLowerCase();
-            if (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) > 'a'+colonnes-1) {
-                println("Veuillez saisir une lettre entre a et " + (char)(colonnes-1+'a'));
-            } else if (paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee) {
+            colonne = readString().toLowerCase();
+            if (length(colonne) != 1 || charAt(colonne,0) < 'a' || charAt(colonne,0) > 'a'+nbColonnes-1) {
+                println("Veuillez saisir une lettre entre a et " + (char)(nbColonnes-1+'a'));
+            } else if (paquet[ligne][charAt(colonne,0)-'a'].estRetournee) {
                 println("Cette carte a déjà été retournée. Veuillez choisir une autre carte.");
-                return saisieValideColonne(paquet, saisieValideLigne(paquet));
+                return saisieValide(paquet);
             }
-        } while (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) >= 'a' + colonnes || paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee);
-        return (charAt(res,0) - 'a');
+        } while (length(colonne) != 1 || charAt(colonne,0) < 'a' || charAt(colonne,0) >= 'a' + nbColonnes || paquet[ligne][charAt(colonne,0)-'a'].estRetournee);
+        int colId = (charAt(colonne,0) - 'a');
+
+        return new int[]{ligne, colId};
     }
 
     /**
@@ -442,26 +437,24 @@ class MemoriseMoi extends Program {
     void tourDeJeuBot(JeuDeCartes jeuDeCartes) {
 
         println("A vous de jouer " + pseudo + " :");
-        int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
-        int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet, choixLigne1);
-        retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+        int[] choix1 = saisieValide(jeuDeCartes.paquet);
+        retourner(jeuDeCartes.paquet[choix1[0]][choix1[1]]);
         afficherPaquet(jeuDeCartes.paquet);
 
-        int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
-        int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet, choixLigne2);
-        retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        int[] choix2 = saisieValide(jeuDeCartes.paquet);
+        retourner(jeuDeCartes.paquet[choix2[0]][choix2[1]]);
         afficherPaquet(jeuDeCartes.paquet);
 
-        if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
-            appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-            appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
-            jeuDeCartes.paquet[choixLigne1][choixColonne1].proprietaire = "joueur";
-            jeuDeCartes.paquet[choixLigne2][choixColonne2].proprietaire = "joueur";
+        if (jeuDeCartes.paquet[choix1[0]][choix1[1]].numId == jeuDeCartes.paquet[choix2[0]][choix2[1]].numId) {
+            appairer(jeuDeCartes.paquet[choix1[0]][choix1[1]]);
+            appairer(jeuDeCartes.paquet[choix2[0]][choix2[1]]);
+            jeuDeCartes.paquet[choix1[0]][choix1[1]].proprietaire = "joueur";
+            jeuDeCartes.paquet[choix2[0]][choix2[1]].proprietaire = "joueur";
             jeuDeCartes.nbCartesRestantes -= 2;
             pointsJoueur=pointsJoueur+1;
         } else {
-            retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-            retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+            retourner(jeuDeCartes.paquet[choix1[0]][choix1[1]]);
+            retourner(jeuDeCartes.paquet[choix2[0]][choix2[1]]);
         }
 
         delay(1000);
@@ -527,23 +520,24 @@ class MemoriseMoi extends Program {
      */
     void tourDeJeuSeul(JeuDeCartes jeuDeCartes) {
         println("A vous de jouer " + pseudo + " :");
-        int choixLigne1 = saisieValideLigne(jeuDeCartes.paquet);
-        int choixColonne1 = saisieValideColonne(jeuDeCartes.paquet, choixLigne1);
-        retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
+        int[] choix1 = saisieValide(jeuDeCartes.paquet);
+        retourner(jeuDeCartes.paquet[choix1[0]][choix1[1]]);
         afficherPaquet(jeuDeCartes.paquet);
 
-        int choixLigne2 = saisieValideLigne(jeuDeCartes.paquet);
-        int choixColonne2 = saisieValideColonne(jeuDeCartes.paquet, choixLigne2);
-        retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        int[] choix2 = saisieValide(jeuDeCartes.paquet);
+        retourner(jeuDeCartes.paquet[choix2[0]][choix2[1]]);
         afficherPaquet(jeuDeCartes.paquet);
 
-        if (jeuDeCartes.paquet[choixLigne1][choixColonne1].numId == jeuDeCartes.paquet[choixLigne2][choixColonne2].numId) {
-            appairer(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-            appairer(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+        if (jeuDeCartes.paquet[choix1[0]][choix1[1]].numId == jeuDeCartes.paquet[choix2[0]][choix2[1]].numId) {
+            appairer(jeuDeCartes.paquet[choix1[0]][choix1[1]]);
+            appairer(jeuDeCartes.paquet[choix2[0]][choix2[1]]);
+            jeuDeCartes.paquet[choix1[0]][choix1[1]].proprietaire = "joueur";
+            jeuDeCartes.paquet[choix2[0]][choix2[1]].proprietaire = "joueur";
             jeuDeCartes.nbCartesRestantes -= 2;
+            pointsJoueur=pointsJoueur+1;
         } else {
-            retourner(jeuDeCartes.paquet[choixLigne1][choixColonne1]);
-            retourner(jeuDeCartes.paquet[choixLigne2][choixColonne2]);
+            retourner(jeuDeCartes.paquet[choix1[0]][choix1[1]]);
+            retourner(jeuDeCartes.paquet[choix2[0]][choix2[1]]);
         }
 
         if (jeuDeCartes.nbCartesRestantes == 0) {
