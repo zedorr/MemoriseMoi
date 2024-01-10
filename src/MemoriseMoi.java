@@ -8,18 +8,6 @@ class MemoriseMoi extends Program {
     int pointsBot = 0;
     
     /**
-     * Affiche le menu principal
-     */
-    void init() {
-        accueil();
-        println("1. Jouer" + '\n' +
-                "2. Règles" + '\n' +
-                "3. Scores" + '\n' +
-                "4. Ajouter des questions" + '\n' +
-                "5. Quitter");
-    }
-
-    /**
      * @param nomFichier
      * Convertit un fichier en String
      */
@@ -35,7 +23,7 @@ class MemoriseMoi extends Program {
         }
         return substring(res, 0, length(res)-5);
     }
-    
+
     /**
      * Affiche le menu d'accueil
      */
@@ -45,6 +33,18 @@ class MemoriseMoi extends Program {
         text("green");
         println(fileToString("ressources/choix.txt"));
         reset();
+    }
+
+    /**
+     * Affiche le menu principal
+     */
+    void init() {
+        accueil();
+        println("1. Jouer" + '\n' +
+                "2. Règles" + '\n' +
+                "3. Scores" + '\n' +
+                "4. Ajouter des questions" + '\n' +
+                "5. Quitter");
     }
 
     /**
@@ -324,6 +324,83 @@ class MemoriseMoi extends Program {
     }
 
     /**
+     * @param paquet
+     * @return int[]
+     * Retourne un tableau avec 2 valeurs, l'indice de la ligne à l'indice 0 et l'indice de la colonne à l'indice 1    
+     */
+    int[] saisieAleatoireBot(Carte[][] paquet) {
+        int[] res = new int[]{-1,-1};
+        int randomLigne = randomInt(length(paquet,1));
+        int randomColonne = randomInt(4);
+        while (paquet[randomLigne][randomColonne].estRetournee) {
+            randomLigne = randomInt(length(paquet,1));
+            randomColonne = randomInt(4);
+        }
+        res[0] = randomLigne;
+        res[1] = randomColonne;
+        return res;
+    }
+
+    /**
+     * @param paquet
+     * @return int
+     * Retourne une saisie de ligne valide
+     */
+    int saisieValideLigne(Carte[][] paquet) {
+        println("Ligne de la carte à retourner : ");
+        int lignes = length(paquet, 1);
+        int res = readStringNb();
+        if (res < 1 || res >= lignes+1) {
+            println("Veuillez saisir un nombre entre 1 et " + lignes);
+            res = readStringNb();
+        }
+        return res-1;
+    }
+
+    /**
+     * @param paquet
+     * @return int
+     * Retourne une saisie de colonne valide
+     */
+    int saisieValideColonne(Carte[][] paquet, int ligneChoisie) {
+        int colonnes = length(paquet, 2);
+        String res;
+        println("Colonne de la carte à retourner : ");
+        do {
+            res = readString().toLowerCase();
+            if (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) > 'a'+colonnes-1) {
+                println("Veuillez saisir une lettre entre a et " + (char)(colonnes-1+'a'));
+            } else if (paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee) {
+                println("Cette carte a déjà été retournée. Veuillez choisir une autre carte.");
+                return saisieValideColonne(paquet, saisieValideLigne(paquet));
+            }
+        } while (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) >= 'a' + colonnes || paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee);
+        return (charAt(res,0) - 'a');
+    }
+
+    /**
+     * @param s
+     * @return int
+     * Convertit un String en entier
+     */
+    int string2Int(String s) {
+        int res = 0;
+        for (int i = 0; i < length(s); i++) {
+            res = res * 10 + (charAt(s, i) - '0');
+        }
+        return res;
+    }
+
+    /**
+     * @param i
+     * @return String
+     * Convertit un entier en String
+     */
+    String int2String(int i) {
+        return "" + i;
+    }
+
+    /**
      * @param matiere
      * Joue au jeu
      */
@@ -474,83 +551,6 @@ class MemoriseMoi extends Program {
             delay(3000);
             score=score+1;
         }
-    }
-
-    /**
-     * @param paquet
-     * @return int[]
-     * Retourne un tableau avec 2 valeurs, l'indice de la ligne à l'indice 0 et l'indice de la colonne à l'indice 1    
-     */
-    int[] saisieAleatoireBot(Carte[][] paquet) {
-        int[] res = new int[]{-1,-1};
-        int randomLigne = randomInt(length(paquet,1));
-        int randomColonne = randomInt(4);
-        while (paquet[randomLigne][randomColonne].estRetournee) {
-            randomLigne = randomInt(length(paquet,1));
-            randomColonne = randomInt(4);
-        }
-        res[0] = randomLigne;
-        res[1] = randomColonne;
-        return res;
-    }
-
-    /**
-     * @param paquet
-     * @return int
-     * Retourne une saisie de ligne valide
-     */
-    int saisieValideLigne(Carte[][] paquet) {
-        println("Ligne de la carte à retourner : ");
-        int lignes = length(paquet, 1);
-        int res = readStringNb();
-        if (res < 1 || res >= lignes+1) {
-            println("Veuillez saisir un nombre entre 1 et " + lignes);
-            res = readStringNb();
-        }
-        return res-1;
-    }
-
-    /**
-     * @param paquet
-     * @return int
-     * Retourne une saisie de colonne valide
-     */
-    int saisieValideColonne(Carte[][] paquet, int ligneChoisie) {
-        int colonnes = length(paquet, 2);
-        String res;
-        println("Colonne de la carte à retourner : ");
-        do {
-            res = readString().toLowerCase();
-            if (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) > 'a'+colonnes-1) {
-                println("Veuillez saisir une lettre entre a et " + (char)(colonnes-1+'a'));
-            } else if (paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee) {
-                println("Cette carte a déjà été retournée. Veuillez choisir une autre carte.");
-                return saisieValideColonne(paquet, saisieValideLigne(paquet));
-            }
-        } while (length(res) != 1 || charAt(res,0) < 'a' || charAt(res,0) >= 'a' + colonnes || paquet[ligneChoisie][charAt(res,0)-'a'].estRetournee);
-        return (charAt(res,0) - 'a');
-    }
-
-    /**
-     * @param s
-     * @return int
-     * Convertit un String en entier
-     */
-    int string2Int(String s) {
-        int res = 0;
-        for (int i = 0; i < length(s); i++) {
-            res = res * 10 + (charAt(s, i) - '0');
-        }
-        return res;
-    }
-
-    /**
-     * @param i
-     * @return String
-     * Convertit un entier en String
-     */
-    String int2String(int i) {
-        return "" + i;
     }
 
     /**

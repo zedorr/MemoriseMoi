@@ -6,8 +6,7 @@ Contacts : mathys.bollengier.etu@univ-lille.fr, adrien.fryson.etu@univ-lille.fr
 
 ## Présentation de Memorise Moi
 
-Logiciel proposant différentes matières aux elèves sous forme de memory.
-Chaque partie remportée que ce soit en solo ou contre l'ordinateur rapporte un point dans le classement. La partie s'arrête lorsque toutes les cartes sont retournées. Des captures d'écran illustrant le fonctionnement du logiciel sont proposées dans le répertoire shots.
+Logiciel offrant différentes matières aux élèves sous la forme d'un jeu de memory. Chaque victoire, que ce soit en mode solo ou contre l'ordinateur, accumule des points dans le classement. La partie prend fin une fois que toutes les cartes ont été retournées. Des captures d'écran illustrant le fonctionnement du logiciel sont disponibles dans le répertoire "shots".
 
 
 ## Utilisation de Memorise Moi
